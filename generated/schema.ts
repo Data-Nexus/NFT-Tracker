@@ -23,8 +23,7 @@ export class Contract extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Contract entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type Contract must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Contract", id.toString(), this);
     }
@@ -73,8 +72,7 @@ export class Account extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Account entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type Account must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Account", id.toString(), this);
     }
@@ -125,8 +123,6 @@ export class TokenRegistry extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("supportsMetadata", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -135,8 +131,7 @@ export class TokenRegistry extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save TokenRegistry entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type TokenRegistry must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("TokenRegistry", id.toString(), this);
     }
@@ -225,8 +220,7 @@ export class Token extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Token entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type Token must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Token", id.toString(), this);
     }
@@ -334,8 +328,7 @@ export class OperatorDelegation extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save OperatorDelegation entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type OperatorDelegation must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("OperatorDelegation", id.toString(), this);
     }
@@ -420,8 +413,7 @@ export class Transfer extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Transfer entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type Transfer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Transfer", id.toString(), this);
     }
@@ -504,8 +496,7 @@ export class Approval extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Approval entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type Approval must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Approval", id.toString(), this);
     }
@@ -589,8 +580,7 @@ export class ApprovalForAll extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save ApprovalForAll entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type ApprovalForAll must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("ApprovalForAll", id.toString(), this);
     }
@@ -679,8 +669,7 @@ export class Transaction extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Transaction entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
+        `Entities of type Transaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set("Transaction", id.toString(), this);
     }
