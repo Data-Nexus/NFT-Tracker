@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.25.0",
-    "@graphprotocol/graph-ts": "0.24.1"
+    "@graphprotocol/graph-ts": "0.24.1",
+    "@openzeppelin/contracts": "^4.5.0"
   }
 }
