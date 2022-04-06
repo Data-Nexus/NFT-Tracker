@@ -17,7 +17,13 @@ import {
 	transactions,
 } from '../../src/graphprotocol-utils'
 
+import { 
+	log 
+} from '@graphprotocol/graph-ts';
+
 export function handleTransfer(event: TransferEvent): void {
+	//log.info(event.transaction.hash.toString(), []);
+	
 	let registry = fetchRegistry(event.address)
 	if (registry != null)
 	{
@@ -40,4 +46,5 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.to          = to.id
 		ev.save()
 	}
+
 }

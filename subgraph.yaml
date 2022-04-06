@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: eip721
-repository: https://github.com/amxx/subgraphs
+description: nftsales-v2
+repository: https://github.com/Data-Nexus/nft-sales-v2
 schema:
   file: ./schema.graphql
 dataSources:
