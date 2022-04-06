@@ -1,6 +1,12 @@
+import { 
+    BigDecimal, 
+    BigInt,
+    ethereum,
+} from '@graphprotocol/graph-ts'
+
 import {
-	ethereum,
-} from '../node_modules/@graphprotocol/graph-ts'
+	Transaction,
+} from '../generated/schema'
 
 
 export namespace events {
@@ -9,7 +15,6 @@ export namespace events {
 	}
 }
 
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 
 export namespace constants {
 	export let   BIGINT_ZERO      = BigInt.fromI32(0)
@@ -19,10 +24,6 @@ export namespace constants {
 	export const ADDRESS_ZERO     = '0x0000000000000000000000000000000000000000'
 	export const BYTES32_ZERO     = '0x0000000000000000000000000000000000000000000000000000000000000000'
 }
-
-import {
-	Transaction,
-} from '../generated/schema'
 
 export namespace transactions {
 	export function log(event: ethereum.Event): Transaction {

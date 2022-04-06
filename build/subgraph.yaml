@@ -1,32 +1,27 @@
 specVersion: 0.0.2
+description: eip721
+repository: https://github.com/amxx/subgraphs
 schema:
   file: schema.graphql
 dataSources:
-  - kind: ethereum
-    name: Contract
+  - kind: ethereum/contract
+    name: IERC721
     network: mainnet
     source:
-      address: "0xDb3B2e1F699CaF230eE75bfBE7d97d70F81bC945"
-      abi: Contract
+      abi: IERC721
+      startBlock: 5806610
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - OwnershipTransferred
-        - Transfer
+        - Token
       abis:
-        - name: Contract
-          file: Contract\abis\Contract.json
+        - name: IERC721
+          file: IERC721\node_modules\@openzeppelin\contracts\build\contracts\IERC721.json
+        - name: IERC721Metadata
+          file: IERC721\node_modules\@openzeppelin\contracts\build\contracts\IERC721Metadata.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: Contract\Contract.wasm
+      file: IERC721\IERC721.wasm
