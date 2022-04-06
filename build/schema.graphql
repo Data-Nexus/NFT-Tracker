@@ -23,47 +23,17 @@ type Token @entity {
 	registry:                     TokenRegistry!
 	identifier:                   BigInt!
 	owner:                        Account!
-	approval:                     Account!
 	uri:                          String
 	transfers:                    [Transfer!]! @derivedFrom(field: "token")
-	approvals:                    [Approval!]! @derivedFrom(field: "token")
 }
 
-type OperatorDelegation @entity {
-	id:                           ID!
-	registry:                     TokenRegistry!
-	owner:                        Account!
-	operator:                     Account!
-	approved:                     Boolean!
-	events:                       [ApprovalForAll!]! @derivedFrom(field: "delegation")
-}
-
-type Transfer implements Event @entity {
+type Transfer  @entity {
 	id:                           ID!
 	transaction:                  Transaction!
 	timestamp:                    BigInt!
 	token:                        Token!
 	from:                         Account!
 	to:                           Account!
-}
-
-type Approval implements Event @entity {
-	id:                           ID!
-	transaction:                  Transaction!
-	timestamp:                    BigInt!
-	token:                        Token!
-	owner:                        Account!
-	approved:                     Account!
-}
-
-type ApprovalForAll implements Event @entity {
-	id:                           ID!
-	transaction:                  Transaction!
-	timestamp:                    BigInt!
-	delegation:                   OperatorDelegation!
-	owner:                        Account!
-	operator:                     Account!
-	approved:                     Boolean!
 }
 
 type Transaction @entity {

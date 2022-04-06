@@ -63,7 +63,6 @@ export function fetchToken(registry: TokenRegistry, id: BigInt): Token {
 		token            = new Token(tokenid)
 		token.registry   = registry.id
 		token.identifier = id
-		token.approval   = account_zero.id
 
 		if (registry.supportsMetadata) {
 			let erc721       = IERC721Metadata.bind(Address.fromString(registry.id))
