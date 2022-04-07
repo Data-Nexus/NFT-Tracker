@@ -36,8 +36,8 @@ export function fetchRegistry(address: Address): TokenRegistry {
 		contract.save()
 	}
 
-	if (contract.asERC721 != null)
-	{
+	//if (contract.asERC721 != null)
+	//{
 		let registry = TokenRegistry.load(contract.id)
 		if (registry == null) {
 			registry = new TokenRegistry(contract.id)
@@ -48,9 +48,9 @@ export function fetchRegistry(address: Address): TokenRegistry {
 			registry.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
 		}
 		return registry as TokenRegistry
-	}
+	//}
 
-	return null as TokenRegistry
+	//return null as TokenRegistry
 }
 
 export function fetchToken(registry: TokenRegistry, id: BigInt): Token {
