@@ -22,14 +22,23 @@ import {
 } from '@graphprotocol/graph-ts';
 
 export function handleTransfer(event: TransferEvent): void {
-	//log.info(event.transaction.hash.toString(), []);
+	log.info('transaction: ' + event.transaction.hash.toHexString(), []);
 	
 	let registry = fetchRegistry(event.address)
 	if (registry != null)
 	{
 		let token = fetchToken(registry, event.params.tokenId)
-		let from  = new Account(event.params.from.toHex())
-		let to    = new Account(event.params.to.toHex())
+		
+		
+		let from  = Account.load(event.params.from.toHex())
+		if (!from) {
+			from = new Account(event.params.from.toHex())
+		}
+		
+		let to  = Account.load(event.params.to.toHex())
+		if (!to) {
+			to = new Account(event.params.to.toHex())
+		}		
 
 		token.owner = to.id
 
