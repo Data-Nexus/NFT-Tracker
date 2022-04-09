@@ -1,43 +1,223 @@
-type Contract @entity {
+type contract @entity {
 	id:                           ID!
-	asERC721:                     TokenRegistry
+	asERC721:                     collection
 }
 
-type Account @entity {
-	id:                           ID!
-	tokens:                       [Token!]! @derivedFrom(field: "owner")
-	transfersFrom:                [Transfer!]! @derivedFrom(field: "from")
-	transfersTo:                  [Transfer!]! @derivedFrom(field: "to")
+type account @entity {
+	" the wallet address "
+	id: ID!
+
+	" The NFTs owned by this account "
+	tokens: [token!]! @derivedFrom(field: "owner")
+	
+	" The transfers originating from this account "
+	transfersFrom: [transfer!]! @derivedFrom(field: "from")
+	
+	" The transfers recevied by this account"
+	transfersTo:   [transfer!]! @derivedFrom(field: "to")
 }
 
-type TokenRegistry @entity {
-	id:                           ID!
-	supportsMetadata:             Boolean
-	name:                         String
-	symbol:                       String
-	tokens:                       [Token!]! @derivedFrom(field: "registry")
+"replaces TokenRegistry"
+type collection @entity {
+
+    " The address of the collection "
+    id: ID!
+    
+    " The name of the collection "
+    name: String
+	
+	" The symbol for the collection "
+	symbol: String
+
+	" Tokens for the collection"
+	tokens: [Token!]! @derivedFrom(field: "registry")
+
+	" Collection supports metadata "
+	supportsMetadata: Boolean
+
+    " Total sales "
+    totalSales: Int
+		
+    " Total volume "
+    totalVolume: BigDecimal!
+    
+    " Top Sale ever "
+    topSale: BigDecimal!
+    
+    " Daily info about the collection "
+    dailyCollectionSnapshot: [dailyCollectionSnapshot!]! @derivedFrom(field: "collection") 
+    
+    " Weekly info about the collection "
+    weeklyCollectionSnapshot: [weeklyCollectionSnapshot!]! @derivedFrom(field: "collection") 
+    
+    " Monthly info about the collection "
+    monthlyCollectionSnapshot: [monthlyCollectionSnapshot!]! @derivedFrom(field: "collection") 
+
 }
 
-type Token @entity {
-	id:                           ID!
-	registry:                     TokenRegistry!
-	identifier:                   BigInt!
-	owner:                        Account!
-	uri:                          String
-	transfers:                    [Transfer!]! @derivedFrom(field: "token")
 }
 
-type Transfer  @entity {
-	id:                           ID!
-	transaction:                  Transaction!
-	timestamp:                    BigInt!
-	token:                        Token!
-	from:                         Account!
-	to:                           Account!
+type token @entity {
+
+    " The collection addrress - The token id "
+    id: ID!  
+
+    " The collection address "
+    collection: collection!
+
+    " The id of the NFT"
+    identifier: BigInt!
+
+	uri: String
+
+	" The address the currently owns the token "
+	Owner: address! 
+    
+    " The NFT last price "
+    lastPrice: BigDecimal!
+    
+    " The NFT top sale ever "
+    topSale: BigDecimal!
+
+	" Transfers involving this token "
+	transfers: [Transfer!]! @derivedFrom(field: "token")
 }
 
-type Transaction @entity {
-  id: 							  ID!
-  timestamp: 					  BigInt!
-  blockNumber:					  BigInt!
+type transfer @entity {
+
+    " The hash of the tx - event id"
+    id: ID!
+    
+	" Transaction hash in which the transfer event occured"
+	transaction: transaction!
+
+    " The collection address "
+    collection: collection!
+    
+    " The collection addrress - The token id "
+    token: token!
+
+    " The id of the NFT"
+    tokenId: BigInt
+    
+	" The sender address "
+    senderAddress: Bytes!
+    
+    " The receiver address "
+    receiverAddress: Bytes!
+
+	" The amount of ETH paid"
+    amount: BigDecimal
+        
+}
+
+type sale @entity {
+  " Transaction hash in which the sale event occured"
+  id: ID!
+  
+  " tx that the sale occured in "
+  transaction: transaction!
+  
+  " the currency that the sale occred in "
+  currency: bytes 
+
+  " the amount of the sale "
+  amount: BigDecimal
+
+  " The marketplace "	
+  platform: String		
+
+}
+
+type transaction @entity {
+  " the hash of the tx"
+  id: ID!
+  
+  " Timestamp for block "
+  timestamp: BigInt!
+  
+  " Block Number "
+  blockNumber:	BigInt!
+  
+  " Integer value of how many transfers were not matched to a sale "
+  unmatchedTransfersEventNum: Int!
+
+  " Array of the event ids for the unmatched transfers "
+  unmatchedTransferEventId: String
+}
+
+type dailyCollectionSnapshot @entity {
+
+    " The collection address - The day "
+    id: ID!
+    
+    " The timestamp of the block "
+    timestamp: Int
+    
+    " The collection address " 
+    collection: collection!
+    
+    " The daily volume "
+    dailyVolume: BigDecimal!
+    
+    " Number of daily transactions "
+    dailyTransactions: Int
+    
+    " Daily top sales "
+    topSale: BigDecimal!
+    
+    " Daily bottom sales "
+    bottomSale: BigDecimal!
+
+}
+
+
+type weeklyCollectionSnapshot @entity {
+
+    " The collection address - The week "
+    id: ID!
+    
+    " The timestamp of the block "
+    timestamp: Int!
+    
+    " The collection address "
+    collection: collection!
+    
+    " The weekly volume "
+    weeklyVolume: BigDecimal!
+    
+    " Number of weekly transactions "
+    weeklyTransactions: Int
+    
+    " weekly top sales "
+    topSale: BigDecimal!
+    
+    " weekly bottom sales "
+    bottomSale: BigDecimal!
+
+}
+
+type monthlyCollectionSnapshot @entity { 
+
+    " The collection address - The month "
+    id: ID!
+    
+    " The timestamp of the block "
+    timestamp: Int!
+    
+    " The collection address "
+    collection: collection!
+    
+    " The monthly volume "
+    monthlyVolume: BigDecimal!  
+    
+    " Number of monthly transactions "
+    monthlyTransactions: Int
+    
+    " monthly top sales "
+    topSale: BigDecimal!
+    
+    " monthly bottom sales "
+    bottomSale: BigDecimal!
+
 }
