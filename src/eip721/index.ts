@@ -31,14 +31,14 @@ export function handleTransfer(event: TransferEvent): void {
 		let token = fetchToken(collection, event.params.tokenId)
 		
 		
-		let senderAddress  = account.load(event.params.from.toHex())
+		let senderAddress  = account.load(event.params.from.toHexString())
 		if (!senderAddress) {
-			senderAddress = new account(event.params.from.toHex())
+			senderAddress = new account(event.params.from.toHexString())
 		}
 		
-		let receiverAddress  = account.load(event.params.to.toHex())
+		let receiverAddress  = account.load(event.params.to.toHexString())
 		if (!receiverAddress) {
-			receiverAddress = new account(event.params.to.toHex())
+			receiverAddress = new account(event.params.to.toHexString())
 		}		
 
 		token.owner = receiverAddress.id
@@ -55,7 +55,7 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.receiverAddress      = receiverAddress.id
 		ev.save()
 
-		let tx = transaction.load(event.transaction.hash.toHex())
+		let tx = transaction.load(event.transaction.hash.toHexString())
 		if (tx != null) {
 			
 			let newTransferNum = tx.unmatchedTransfersEventNum + 1 

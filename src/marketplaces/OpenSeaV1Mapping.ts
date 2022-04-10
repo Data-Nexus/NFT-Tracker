@@ -23,10 +23,8 @@ import {
 // TakerAsk Handler starts here
 export function handleOSv1Sale(event: OrdersMatched): void {
   
-  log.info(event.transaction.hash.toHex(), [])
-  
   //1. load transaction
-  let tx = transaction.load(event.transaction.hash.toHex())
+  let tx = transaction.load(event.transaction.hash.toHexString())
 
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
   if (tx != null) {
@@ -36,7 +34,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
     if (saleEntity != null) {
 
     //4. Assign currency address, amount, txId and platform to sale entity
-    saleEntity.transaction = event.transaction.hash.toHex()
+    saleEntity.transaction = event.transaction.hash.toHexString()
     saleEntity.currency = 'ETH'
     saleEntity.amount = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000'))
     saleEntity.platform = 'OpenSea'
@@ -52,6 +50,8 @@ export function handleOSv1Sale(event: OrdersMatched): void {
   
     }
   }
+
+  else log.error('OpenSeaV1 Mapping errored from transaction: ' + event.transaction.hash.toHexString(), [])
 
 }
 
