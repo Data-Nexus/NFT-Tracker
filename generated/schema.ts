@@ -566,20 +566,20 @@ export class sale extends Entity {
     this.set("transaction", Value.fromString(value));
   }
 
-  get currency(): Bytes | null {
+  get currency(): string | null {
     let value = this.get("currency");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set currency(value: Bytes | null) {
+  set currency(value: string | null) {
     if (!value) {
       this.unset("currency");
     } else {
-      this.set("currency", Value.fromBytes(<Bytes>value));
+      this.set("currency", Value.fromString(<string>value));
     }
   }
 

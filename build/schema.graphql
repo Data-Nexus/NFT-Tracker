@@ -120,7 +120,7 @@ type sale @entity {
   transaction: transaction!
   
   " the currency that the sale occred in "
-  currency: Bytes 
+  currency: String 
 
   " the amount of the sale "
   amount: BigDecimal

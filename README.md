@@ -8,14 +8,6 @@ Key Assumption made in this logic is that every marketplace calls an NFT contrac
 
 # TODO:
 
-# Update handleTransfer
-
-New schema has completely altered the mapping for handleTransfer. We should leverage existing logic produced by Amxx as much as possible and add in the necessary items that we need.
-
-Possible issue with the transfer.amount as a nullable bigdecimal, resolve as necessary.
-
-Check transfer.sale to ensure that we can load this id after the entity has been loaded without issue.
-
 # Model handleSale event logic 
 
 (Will be replicated for each marketplace, ideally we can call this as a utility function)

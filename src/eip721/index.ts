@@ -55,7 +55,7 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.receiverAddress      = receiverAddress.id
 		ev.save()
 
-		let tx = transaction.load(event.transaction.hash.toString())
+		let tx = transaction.load(event.transaction.hash.toHex())
 		if (tx != null) {
 			
 			let newTransferNum = tx.unmatchedTransfersEventNum + 1 
