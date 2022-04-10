@@ -108,6 +108,9 @@ type transfer @entity {
 
 	" The amount of ETH paid"
     amount: BigDecimal
+
+	" matched sale event for the transfer "
+	matchedSale: sale 
         
 }
 
