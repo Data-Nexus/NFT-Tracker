@@ -5,7 +5,7 @@ import {
 } from '@graphprotocol/graph-ts'
 
 import {
-	Transaction,
+	transaction,
 } from '../generated/schema'
 
 
@@ -26,12 +26,13 @@ export namespace constants {
 }
 
 export namespace transactions {
-	export function log(event: ethereum.Event): Transaction {
-		let tx = new Transaction(event.transaction.hash.toHex())
+	export function log(event: ethereum.Event): transaction {
+		let tx = new transaction(event.transaction.hash.toHex())
 		tx.timestamp   = event.block.timestamp
 		tx.blockNumber = event.block.number
+        tx.unmatchedTransfersEventNum = 0
 		tx.save()
-		return tx as Transaction
+		return tx as transaction
 	}
-	export type Tx = Transaction
+	export type Tx = transaction
 }

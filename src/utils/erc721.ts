@@ -8,10 +8,10 @@ import {
 } from '../../generated/IERC721/IERC721Metadata'
 
 import {
-	Account,
-	TokenRegistry,
-    Contract,
-	Token,
+	account,
+	collection,
+    contract,
+	token,
 } from '../../generated/schema'
 
 import {
@@ -22,53 +22,53 @@ import {
 	constants,
 } from '../../src/graphprotocol-utils'
 
-export function fetchRegistry(address: Address): TokenRegistry {
+export function fetchRegistry(address: Address): collection {
 	let erc721   = IERC721Metadata.bind(address)
-	let contract = Contract.load(address.toHex())
+	let contractEntity = contract.load(address.toHex())
 
-	if (contract == null) {
-		contract = new Contract(address.toHex())
+	if (contractEntity == null) {
+		contractEntity = new contract(address.toHex())
 		let introspection_01ffc9a7 = supportsInterface(erc721, '01ffc9a7') // ERC165
 		let introspection_80ac58cd = supportsInterface(erc721, '80ac58cd') // ERC721
 		let introspection_00000000 = supportsInterface(erc721, '00000000', false)
 		let isERC721               = introspection_01ffc9a7 && introspection_80ac58cd && introspection_00000000
-		contract.asERC721          = isERC721 ? contract.id : null
-		contract.save()
+		contractEntity.asERC721          = isERC721 ? contractEntity.id : null
+		contractEntity.save()
 	}
 
 	//if (contract.asERC721 != null)
 	//{
-		let registry = TokenRegistry.load(contract.id)
-		if (registry == null) {
-			registry = new TokenRegistry(contract.id)
+		let collectionEntity = collection.load(contractEntity.id)
+		if (collectionEntity == null) {
+			collectionEntity = new collection(contractEntity.id)
 			let try_name              = erc721.try_name()
 			let try_symbol            = erc721.try_symbol()
-			registry.name             = try_name.reverted   ? '' : try_name.value
-			registry.symbol           = try_symbol.reverted ? '' : try_symbol.value
-			registry.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
+			collectionEntity.name             = try_name.reverted   ? '' : try_name.value
+			collectionEntity.symbol           = try_symbol.reverted ? '' : try_symbol.value
+			collectionEntity.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
 		}
-		return registry as TokenRegistry
+		return collectionEntity as collection
 	//}
 
-	//return null as TokenRegistry
+	//return null as collection
 }
 
-export function fetchToken(registry: TokenRegistry, id: BigInt): Token {
-	let tokenid = registry.id.concat('-').concat(id.toHex())
-	let token = Token.load(tokenid)
-	if (token == null) {
-		let account_zero = new Account(constants.ADDRESS_ZERO)
+export function fetchToken(collection: collection, id: BigInt): token {
+	let tokenid = collection.id.concat('-').concat(id.toHex())
+	let tokenEntity = token.load(tokenid)
+	if (tokenEntity == null) {
+		let account_zero = new account(constants.ADDRESS_ZERO)
 		account_zero.save()
 
-		token            = new Token(tokenid)
-		token.registry   = registry.id
-		token.identifier = id
+		tokenEntity            = new token(tokenid)
+		tokenEntity.collection = collection.id
+		tokenEntity.identifier = id
 
-		if (registry.supportsMetadata) {
-			let erc721       = IERC721Metadata.bind(Address.fromString(registry.id))
+		if (collection.supportsMetadata) {
+			let erc721       = IERC721Metadata.bind(Address.fromString(collection.id))
 			let try_tokenURI = erc721.try_tokenURI(id)
-			token.uri        = try_tokenURI.reverted ? '' : try_tokenURI.value
+			tokenEntity.uri        = try_tokenURI.reverted ? '' : try_tokenURI.value
 		}
 	}
-	return token as Token
+	return tokenEntity as token
 }

@@ -8,7 +8,7 @@ type account @entity {
 	id: ID!
 
 	" The NFTs owned by this account "
-	tokens: [token!]! @derivedFrom(field: "Owner")
+	tokens: [token!]! @derivedFrom(field: "owner")
 	
 	" The transfers originating from this account "
 	transfersFrom: [transfer!]! @derivedFrom(field: "senderAddress")
@@ -69,7 +69,7 @@ type token @entity {
 	uri: String
 
 	" The address the currently owns the token "
-	Owner: account 
+	owner: account 
     
     " The NFT last price "
     lastPrice: BigDecimal!

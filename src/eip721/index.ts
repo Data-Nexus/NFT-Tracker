@@ -1,6 +1,7 @@
 import {
-	Account,
-	Transfer,
+	account,
+	transfer,
+	transaction,
 } from '../../generated/schema'
 
 import {
@@ -24,36 +25,43 @@ import {
 export function handleTransfer(event: TransferEvent): void {
 	log.info('transaction: ' + event.transaction.hash.toHexString(), []);
 	
-	let registry = fetchRegistry(event.address)
-	if (registry != null)
+	let collection = fetchRegistry(event.address)
+	if (collection != null)
 	{
-		let token = fetchToken(registry, event.params.tokenId)
+		let token = fetchToken(collection, event.params.tokenId)
 		
 		
-		let from  = Account.load(event.params.from.toHex())
-		if (!from) {
-			from = new Account(event.params.from.toHex())
+		let senderAddress  = account.load(event.params.from.toHex())
+		if (!senderAddress) {
+			senderAddress = new account(event.params.from.toHex())
 		}
 		
-		let to  = Account.load(event.params.to.toHex())
-		if (!to) {
-			to = new Account(event.params.to.toHex())
+		let receiverAddress  = account.load(event.params.to.toHex())
+		if (!receiverAddress) {
+			receiverAddress = new account(event.params.to.toHex())
 		}		
 
-		token.owner = to.id
+		token.owner = receiverAddress.id
 
-		registry.save()
+		collection.save()
 		token.save()
-		from.save()
-		to.save()
+		senderAddress.save()
+		receiverAddress.save()
 
-		let ev = new Transfer(events.id(event))
+		let ev = new transfer(events.id(event))
 		ev.transaction = transactions.log(event).id
-		ev.timestamp   = event.block.timestamp
 		ev.token       = token.id
-		ev.from        = from.id
-		ev.to          = to.id
+		ev.senderAddress        = senderAddress.id
+		ev.receiverAddress      = receiverAddress.id
 		ev.save()
+
+		let tx = transaction.load(event.transaction.hash.toString())
+		if (tx != null) {
+			
+			let newTransferNum = tx.unmatchedTransfersEventNum + 1 
+			tx.unmatchedTransfersEventNum = newTransferNum
+			tx.save()
+		}
 	}
 
 }

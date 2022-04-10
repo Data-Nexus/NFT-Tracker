@@ -331,8 +331,8 @@ export class token extends Entity {
     }
   }
 
-  get Owner(): string | null {
-    let value = this.get("Owner");
+  get owner(): string | null {
+    let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -340,11 +340,11 @@ export class token extends Entity {
     }
   }
 
-  set Owner(value: string | null) {
+  set owner(value: string | null) {
     if (!value) {
-      this.unset("Owner");
+      this.unset("owner");
     } else {
-      this.set("Owner", Value.fromString(<string>value));
+      this.set("owner", Value.fromString(<string>value));
     }
   }
 
