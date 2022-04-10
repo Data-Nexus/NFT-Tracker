@@ -8,13 +8,13 @@ type account @entity {
 	id: ID!
 
 	" The NFTs owned by this account "
-	tokens: [token!]! @derivedFrom(field: "owner")
+	tokens: [token!]! @derivedFrom(field: "Owner")
 	
 	" The transfers originating from this account "
-	transfersFrom: [transfer!]! @derivedFrom(field: "from")
+	transfersFrom: [transfer!]! @derivedFrom(field: "senderAddress")
 	
 	" The transfers recevied by this account"
-	transfersTo:   [transfer!]! @derivedFrom(field: "to")
+	transfersTo:   [transfer!]! @derivedFrom(field: "receiverAddress")
 }
 
 "replaces TokenRegistry"
@@ -30,7 +30,7 @@ type collection @entity {
 	symbol: String
 
 	" Tokens for the collection"
-	tokens: [Token!]! @derivedFrom(field: "registry")
+	tokens: [token!]! @derivedFrom(field: "collection")
 
 	" Collection supports metadata "
 	supportsMetadata: Boolean
@@ -55,8 +55,6 @@ type collection @entity {
 
 }
 
-}
-
 type token @entity {
 
     " The collection addrress - The token id "
@@ -71,7 +69,7 @@ type token @entity {
 	uri: String
 
 	" The address the currently owns the token "
-	Owner: address! 
+	Owner: account 
     
     " The NFT last price "
     lastPrice: BigDecimal!
@@ -80,7 +78,7 @@ type token @entity {
     topSale: BigDecimal!
 
 	" Transfers involving this token "
-	transfers: [Transfer!]! @derivedFrom(field: "token")
+	transfers: [transfer!]! @derivedFrom(field: "token")
 }
 
 type transfer @entity {
@@ -101,10 +99,10 @@ type transfer @entity {
     tokenId: BigInt
     
 	" The sender address "
-    senderAddress: Bytes!
+    senderAddress: account
     
     " The receiver address "
-    receiverAddress: Bytes!
+    receiverAddress: account
 
 	" The amount of ETH paid"
     amount: BigDecimal
@@ -122,7 +120,7 @@ type sale @entity {
   transaction: transaction!
   
   " the currency that the sale occred in "
-  currency: bytes 
+  currency: Bytes 
 
   " the amount of the sale "
   amount: BigDecimal
