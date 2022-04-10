@@ -30,15 +30,16 @@ export function handleOSv1Sale(event: OrdersMatched): void {
   if (tx != null) {
 
     //3. create new sale entity (id = tx hash - eventId)  
-    let saleEntity = new sale(tx.id + '-' + event.logIndex.toString())
-    if (saleEntity != null) {
-
-    //4. Assign currency address, amount, txId and platform to sale entity
-    saleEntity.transaction = event.transaction.hash.toHexString()
-    saleEntity.currency = 'ETH'
-    saleEntity.amount = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000'))
-    saleEntity.platform = 'OpenSea'
-    saleEntity.save
+    let saleEntity = sale.load(tx.id + '-' + event.logIndex.toString())
+    if (saleEntity == null) {
+    
+      let saleEntity = new sale(tx.id + '-' + event.logIndex.toString())
+      //4. Assign currency address, amount, txId and platform to sale entity
+      saleEntity.transaction = event.transaction.hash.toHexString()
+      saleEntity.currency = 'ETH'
+      saleEntity.amount = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000'))
+      saleEntity.platform = 'OpenSea'
+      saleEntity.save
     
     //5. Assign sale.amount / transaction.unmatchedTransfersEventNum to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)
     
@@ -51,7 +52,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
     }
   }
 
-  else log.error('OpenSeaV1 Mapping errored from transaction: ' + event.transaction.hash.toHexString(), [])
+  //else log.error('OpenSeaV1 Mapping errored from transaction: ' + event.transaction.hash.toHexString(), [])
 
 }
 

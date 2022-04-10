@@ -27,7 +27,7 @@ export namespace constants {
 
 export namespace transactions {
 	export function log(event: ethereum.Event): transaction {
-		let tx = new transaction(event.transaction.hash.toHex())
+		let tx = new transaction(event.transaction.hash.toHexString())
 		tx.timestamp   = event.block.timestamp
 		tx.blockNumber = event.block.number
         tx.unmatchedTransfersEventNum = 0

@@ -24,10 +24,10 @@ import {
 
 export function fetchRegistry(address: Address): collection {
 	let erc721   = IERC721Metadata.bind(address)
-	let contractEntity = contract.load(address.toHex())
+	let contractEntity = contract.load(address.toHexString())
 
 	if (contractEntity == null) {
-		contractEntity = new contract(address.toHex())
+		contractEntity = new contract(address.toHexString())
 		let introspection_01ffc9a7 = supportsInterface(erc721, '01ffc9a7') // ERC165
 		let introspection_80ac58cd = supportsInterface(erc721, '80ac58cd') // ERC721
 		let introspection_00000000 = supportsInterface(erc721, '00000000', false)
@@ -54,7 +54,7 @@ export function fetchRegistry(address: Address): collection {
 }
 
 export function fetchToken(collection: collection, id: BigInt): token {
-	let tokenid = collection.id.concat('-').concat(id.toHex())
+	let tokenid = collection.id.concat('-').concat(id.toHexString())
 	let tokenEntity = token.load(tokenid)
 	if (tokenEntity == null) {
 		let account_zero = new account(constants.ADDRESS_ZERO)
