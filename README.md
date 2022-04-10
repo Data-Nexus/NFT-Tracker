@@ -38,7 +38,7 @@ Handle sale should:
 
 # Metrics 
 
-Using the existing logic from nft-sales-subgraph(https://github.com/Data-Nexus/nft-sales-subgraph/blob/3e1dab1478341f51377c88f538651dce78324a70/src/LooksRareSale.ts#L98) (lines 98-222), incorporate collection metrics and daily/weekly/monthly snapshots.
+Using the existing logic from [nft-sales-subgraph](https://github.com/Data-Nexus/nft-sales-subgraph/blob/3e1dab1478341f51377c88f538651dce78324a70/src/LooksRareSale.ts#L98) (lines 98-222), incorporate collection metrics and daily/weekly/monthly snapshots.
 
 # OpenSea
 
@@ -60,9 +60,9 @@ Add handleLRTakerBid sale event in mappings
 
 Various Transaction Type examples:
 
-TakerBid - 0xcb84b421d0e355f02e4beace7ec54edaa57cdcd68ca4c1e2b69af6636c33fe5d
+[TakerBid](https://etherscan.io/tx/0xcb84b421d0e355f02e4beace7ec54edaa57cdcd68ca4c1e2b69af6636c33fe5d)
 
-TakerAsk - 0xf76051068ae86d602265feeb835677cff7105a718d010de6fd412e57dec87af4
+[TakerAsk](https://etherscan.io/tx/0xf76051068ae86d602265feeb835677cff7105a718d010de6fd412e57dec87af4)
 
 
 
@@ -70,5 +70,5 @@ TakerAsk - 0xf76051068ae86d602265feeb835677cff7105a718d010de6fd412e57dec87af4
 
 Interesting transaction with cross platform sales noting to ensure it indexes as intended.
 
-gem.xyz multicontract transaction: 0x692af20c5e84c896984034d8636da698e40fae72e973fc090fc46ad0dda06f52
+[multicontract transaction](https://etherscan.io/tx/0x692af20c5e84c896984034d8636da698e40fae72e973fc090fc46ad0dda06f52) 
 
