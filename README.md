@@ -74,3 +74,11 @@ Interesting transaction with cross platform sales noting to ensure it indexes as
 
 [multicontract transaction](https://etherscan.io/tx/0x692af20c5e84c896984034d8636da698e40fae72e973fc090fc46ad0dda06f52) 
 
+
+# Contracts
+
+OpenSea v1 - 0x7be8076f4ea4a4ad08075c2508e481d6c946d12b (start block 5774644)
+
+Opensea V2 - 0x7f268357a8c2552623316e2562d90e642bb538e5 (start block 14120913)
+
+LooksRare - 0x59728544B08AB483533076417FbBB2fD0B17CE3a (start block 13885625)
