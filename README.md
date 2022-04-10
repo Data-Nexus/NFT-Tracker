@@ -16,7 +16,9 @@ Possible issue with the transfer.amount as a nullable bigdecimal, resolve as nec
 
 Check transfer.sale to ensure that we can load this id after the entity has been loaded without issue.
 
-# Model handleSale event logic (which will be replicated for each marketplace, ideally we can call this as a utility function)
+# Model handleSale event logic 
+
+(Will be replicated for each marketplace, ideally we can call this as a utility function)
 
 Handle sale should:
 
