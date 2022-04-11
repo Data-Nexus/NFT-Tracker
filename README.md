@@ -8,13 +8,15 @@ Key Assumption made in this logic is that every marketplace calls an NFT contrac
 
 # TODO:
 
+# Schema TODO
 
+Update transaction entity to be able to step into sales & transfers. (thus allowing consumer to query top 10 most recent transactions)
 
 # Model handleSale event logic 
 
 (Will be replicated for each marketplace, ideally we can call this as a utility function)
 
-Important!: determine how to handle transfers that occur in other currencies.
+Important!: determine how to handle transfers that occur in other currencies. [example tx](https://etherscan.io/tx/0x53bb87195e5b8235e5bd51228b37b8f9685ea555c0b0aae5228d74e19652b316)
 
 Handle sale should:
 

@@ -16,7 +16,6 @@ import {
 	transactions,
 } from '../../src/graphprotocol-utils'
 
-
 import { 
     BigDecimal, 
     BigInt,
@@ -31,7 +30,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
   let tx = transaction.load(event.transaction.hash.toHexString()) 
   
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
-  if (tx != null) {
+  if (tx != null && event.transaction.value != constants.BIGINT_ZERO) {
     
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(transactions.log(event).id + '-' + event.logIndex.toString())

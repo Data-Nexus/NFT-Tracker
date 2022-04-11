@@ -147,10 +147,11 @@ type transaction @entity {
   unmatchedTransferEventId: String
 
   " Transfers that occured within the transaction "
-  transfers: transfer
+  transfers: [transfer!] @derivedFrom(field: "transaction")
 
   " Sale events that occured within the transaction "
-  sales: sale
+  sales: [sale!] @derivedFrom(field: "transaction")
+
 }
 
 type dailyCollectionSnapshot @entity {

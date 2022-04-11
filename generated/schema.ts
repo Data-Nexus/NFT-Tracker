@@ -697,37 +697,37 @@ export class transaction extends Entity {
     }
   }
 
-  get transfers(): string | null {
+  get transfers(): Array<string> | null {
     let value = this.get("transfers");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toString();
+      return value.toStringArray();
     }
   }
 
-  set transfers(value: string | null) {
+  set transfers(value: Array<string> | null) {
     if (!value) {
       this.unset("transfers");
     } else {
-      this.set("transfers", Value.fromString(<string>value));
+      this.set("transfers", Value.fromStringArray(<Array<string>>value));
     }
   }
 
-  get sales(): string | null {
+  get sales(): Array<string> | null {
     let value = this.get("sales");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toString();
+      return value.toStringArray();
     }
   }
 
-  set sales(value: string | null) {
+  set sales(value: Array<string> | null) {
     if (!value) {
       this.unset("sales");
     } else {
-      this.set("sales", Value.fromString(<string>value));
+      this.set("sales", Value.fromStringArray(<Array<string>>value));
     }
   }
 }

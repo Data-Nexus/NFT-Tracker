@@ -52,6 +52,7 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.transaction 			= transactions.log(event).id
 		ev.token       			= token.id
 		ev.tokenId     			= token.id	//added for testing
+		ev.collection			= collection.id
 		ev.senderAddress        = senderAddress.id
 		ev.receiverAddress      = receiverAddress.id
 		ev.save()
