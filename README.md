@@ -8,19 +8,23 @@ Key Assumption made in this logic is that every marketplace calls an NFT contrac
 
 # TODO:
 
+
+
 # Model handleSale event logic 
 
 (Will be replicated for each marketplace, ideally we can call this as a utility function)
 
+Important!: determine how to handle transfers that occur in other currencies.
+
 Handle sale should:
 
-1. load transaction
+~~1. load transaction~~
 
-2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?
+~~2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?~~
 
-3. create new sale entity (id = tx hash - eventId)
+~~3. create new sale entity (id = tx hash - eventId)~~
 
-4. Assign currency address, amount, txId and platform to sale entity
+~~4. Assign currency address, amount, txId and platform to sale entity~~
 
 5. Assign sale.amount / transaction.unmatchedTransfersEventNum to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)
 

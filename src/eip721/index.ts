@@ -49,8 +49,9 @@ export function handleTransfer(event: TransferEvent): void {
 		receiverAddress.save()
 
 		let ev = new transfer(events.id(event))
-		ev.transaction = transactions.log(event).id
-		ev.token       = token.id
+		ev.transaction 			= transactions.log(event).id
+		ev.token       			= token.id
+		ev.tokenId     			= token.id	//added for testing
 		ev.senderAddress        = senderAddress.id
 		ev.receiverAddress      = receiverAddress.id
 		ev.save()
@@ -59,7 +60,16 @@ export function handleTransfer(event: TransferEvent): void {
 		if (tx != null) {
 			
 			let newTransferNum = tx.unmatchedTransfersEventNum + 1 
+			
+			//add event id to array to later identify transfer event if/when sale occurs
+			let newTransferArray = tx.unmatchedTransferEventId
+			if (newTransferArray == null) {
+				newTransferArray = event.logIndex.toString()
+			} 
+			else {newTransferArray = tx.unmatchedTransferEventId + ',' + event.logIndex.toString()}
+
 			tx.unmatchedTransfersEventNum = newTransferNum
+			tx.unmatchedTransferEventId = newTransferArray
 			tx.save()
 		}
 	}

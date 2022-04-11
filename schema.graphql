@@ -45,10 +45,10 @@ type collection @entity {
     topSale: BigDecimal!
     
     " Daily info about the collection "
-    dailyCollectionSnapshot: [dailyCollectionSnapshot!]! @derivedFrom(field: "collection") 
+    dailyCollectionSnapshot:   [dailyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
     
     " Weekly info about the collection "
-    weeklyCollectionSnapshot: [weeklyCollectionSnapshot!]! @derivedFrom(field: "collection") 
+    weeklyCollectionSnapshot:  [weeklyCollectionSnapshot!]!  @derivedFrom(field: "collection") 
     
     " Monthly info about the collection "
     monthlyCollectionSnapshot: [monthlyCollectionSnapshot!]! @derivedFrom(field: "collection") 
@@ -96,7 +96,7 @@ type transfer @entity {
     token: token!
 
     " The id of the NFT"
-    tokenId: BigInt
+    tokenId: String
     
 	" The sender address "
     senderAddress: account
@@ -145,6 +145,12 @@ type transaction @entity {
 
   " Array of the event ids for the unmatched transfers "
   unmatchedTransferEventId: String
+
+  " Transfers that occured within the transaction "
+  transfers: transfer
+
+  " Sale events that occured within the transaction "
+  sales: sale
 }
 
 type dailyCollectionSnapshot @entity {

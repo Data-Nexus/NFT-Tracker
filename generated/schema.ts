@@ -438,20 +438,20 @@ export class transfer extends Entity {
     this.set("token", Value.fromString(value));
   }
 
-  get tokenId(): BigInt | null {
+  get tokenId(): string | null {
     let value = this.get("tokenId");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBigInt();
+      return value.toString();
     }
   }
 
-  set tokenId(value: BigInt | null) {
+  set tokenId(value: string | null) {
     if (!value) {
       this.unset("tokenId");
     } else {
-      this.set("tokenId", Value.fromBigInt(<BigInt>value));
+      this.set("tokenId", Value.fromString(<string>value));
     }
   }
 
@@ -694,6 +694,40 @@ export class transaction extends Entity {
       this.unset("unmatchedTransferEventId");
     } else {
       this.set("unmatchedTransferEventId", Value.fromString(<string>value));
+    }
+  }
+
+  get transfers(): string | null {
+    let value = this.get("transfers");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set transfers(value: string | null) {
+    if (!value) {
+      this.unset("transfers");
+    } else {
+      this.set("transfers", Value.fromString(<string>value));
+    }
+  }
+
+  get sales(): string | null {
+    let value = this.get("sales");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set sales(value: string | null) {
+    if (!value) {
+      this.unset("sales");
+    } else {
+      this.set("sales", Value.fromString(<string>value));
     }
   }
 }

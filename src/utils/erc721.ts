@@ -54,7 +54,7 @@ export function fetchRegistry(address: Address): collection {
 }
 
 export function fetchToken(collection: collection, id: BigInt): token {
-	let tokenid = collection.id.concat('-').concat(id.toHexString())
+	let tokenid = collection.id.concat('-').concat(id.toString())
 	let tokenEntity = token.load(tokenid)
 	if (tokenEntity == null) {
 		let account_zero = new account(constants.ADDRESS_ZERO)
