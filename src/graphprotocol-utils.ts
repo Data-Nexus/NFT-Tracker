@@ -31,8 +31,10 @@ export namespace transactions {
 		tx.timestamp   = event.block.timestamp
 		tx.blockNumber = event.block.number
         tx.unmatchedTransfersEventNum = 0
+        tx.unmatchedTransferEventId = ''
 		tx.save()
 		return tx as transaction
 	}
 	export type Tx = transaction
 }
+

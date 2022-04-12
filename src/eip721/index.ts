@@ -72,6 +72,7 @@ export function handleTransfer(event: TransferEvent): void {
 			tx.unmatchedTransfersEventNum = newTransferNum
 			tx.unmatchedTransferEventId = newTransferArray
 			tx.save()
+			
 		}
 	}
 
