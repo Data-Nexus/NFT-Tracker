@@ -26,7 +26,7 @@ import {
 export function handleOSv1Sale(event: OrdersMatched): void {
   
   //1. load transaction
-  let tx = transaction.load(event.transaction.hash.toHexString()) 
+  let tx = transaction.load(event.transaction.hash.toHexString())
   
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
   if (tx && event.transaction.value != constants.BIGINT_ZERO) {
@@ -53,16 +53,21 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
 
       if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
-        MatchTransferWithSale(
-            tx.transfers, 
+                
+        let array = tx.transfers
+        for (let index = 0; index < array.length; index++) {
+
+          let trId = array[index]            
+
+          MatchTransferWithSale(
+            trId, 
             transferAmount,
             tx.id,
             saleEntity.id
-        )
-      } 
-
-      //7. Save sale and save transaction
-      //saleEntity.save()
+          )
+          
+        }
+      }
 
       //8. Update daily/weekly/monthly metrics 
   

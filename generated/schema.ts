@@ -612,6 +612,7 @@ export class transaction extends Entity {
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
     this.set("unmatchedTransferCount", Value.fromI32(0));
+    this.set("transfers", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {

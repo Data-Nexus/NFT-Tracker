@@ -144,7 +144,7 @@ type transaction @entity {
   unmatchedTransferCount: Int!   
 
   " Transfers that occured within the transaction "
-  transfers: [transfer!]! @derivedFrom(field: "transaction")
+  transfers: [transfer!]! 
 
   " Sale events that occured within the transaction "
   sales: [sale!] @derivedFrom(field: "transaction")

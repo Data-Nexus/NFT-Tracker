@@ -61,8 +61,12 @@ export function handleTransfer(event: TransferEvent): void {
 		let tx = transaction.load(event.transaction.hash.toHexString())
 		if (tx != null) {
 			
+			let array = tx.transfers 
+			array.push(ev.id)
+			
 			let newTransferCount = tx.unmatchedTransferCount + 1 
 			tx.unmatchedTransferCount = newTransferCount
+			tx.transfers = array 
 			tx.save()
 			
 		}
