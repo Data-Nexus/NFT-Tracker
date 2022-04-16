@@ -384,6 +384,7 @@ export class transfer extends Entity {
     this.set("transaction", Value.fromString(""));
     this.set("collection", Value.fromString(""));
     this.set("token", Value.fromString(""));
+    this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -489,21 +490,13 @@ export class transfer extends Entity {
     }
   }
 
-  get amount(): BigDecimal | null {
+  get amount(): BigDecimal {
     let value = this.get("amount");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigDecimal();
-    }
+    return value!.toBigDecimal();
   }
 
-  set amount(value: BigDecimal | null) {
-    if (!value) {
-      this.unset("amount");
-    } else {
-      this.set("amount", Value.fromBigDecimal(<BigDecimal>value));
-    }
+  set amount(value: BigDecimal) {
+    this.set("amount", Value.fromBigDecimal(value));
   }
 
   get matchedSale(): string | null {

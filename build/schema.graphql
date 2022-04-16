@@ -83,7 +83,7 @@ type token @entity {
 
 type transfer @entity {
 
-    " The hash of the tx - event id"
+    " Block Number and Event Id in which the transfers event occured"
     id: ID!
     
 	" Transaction hash in which the transfer event occured"
@@ -105,7 +105,7 @@ type transfer @entity {
     receiverAddress: account
 
 	" The amount of ETH paid"
-    amount: BigDecimal
+    amount: BigDecimal!
 
 	" matched sale event for the transfer "
 	matchedSale: sale 
@@ -113,7 +113,7 @@ type transfer @entity {
 }
 
 type sale @entity {
-  " Transaction hash in which the sale event occured"
+  " Block Number and Event Id in which the sale event occured"
   id: ID!
   
   " tx that the sale occured in "

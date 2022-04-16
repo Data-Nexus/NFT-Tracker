@@ -14,6 +14,7 @@ import {
 } from '../utils/erc721'
 
 import {
+	constants,
 	events,
 	transactions,
 } from '../../src/graphprotocol-utils'
@@ -23,7 +24,6 @@ import {
 } from '@graphprotocol/graph-ts';
 
 export function handleTransfer(event: TransferEvent): void {
-	log.info('transaction: ' + event.transaction.hash.toHexString(), []);
 	
 	let collection = fetchRegistry(event.address)
 	if (collection != null)
@@ -55,6 +55,7 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.collection			= collection.id
 		ev.senderAddress        = senderAddress.id
 		ev.receiverAddress      = receiverAddress.id
+		ev.amount 				= constants.BIGDECIMAL_ZERO
 		ev.save()
 
 		let tx = transaction.load(event.transaction.hash.toHexString())

@@ -1,13 +1,13 @@
 import {
 	sale,
-    collection,
-    token,
+  collection,
+  token,
 	transfer,
 	transaction,
 } from '../../generated/schema'
 
 import {
-    MatchTransferWithSale
+  MatchTransferWithSale
 } from "../../src/utils/matchTransferSale"
 
 import {
@@ -19,7 +19,7 @@ import {
 } from '../../src/graphprotocol-utils'
 
 import { 
-    BigDecimal, 
+  BigDecimal, log, 
 } from "@graphprotocol/graph-ts"
 
 // TakerAsk Handler starts here
@@ -29,36 +29,40 @@ export function handleOSv1Sale(event: OrdersMatched): void {
   let tx = transaction.load(event.transaction.hash.toHexString()) 
   
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
-  if (tx != null && event.transaction.value != constants.BIGINT_ZERO) {
+  if (tx && event.transaction.value != constants.BIGINT_ZERO) {
     
     //3. create new sale entity (id = tx hash - eventId)  
-    let saleEntity = sale.load(tx.id + '-' + event.logIndex.toString())
-    if (saleEntity == null) {
+    let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
+    if (!saleEntity) {
     
       //4. Assign currency address, amount, txId and platform to sale entity
-      let saleEntity = new sale(tx.id + '-' + event.logIndex.toString())
+      let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
       saleEntity.currency      = 'ETH'
+      saleEntity.platform      = 'OpenSea'
 
       //Amount to adjust to params.price once we have a solution for multi-currency
       saleEntity.amount        = event.transaction.value.divDecimal(BigDecimal.fromString('1000000000000000000')) 
-      saleEntity.platform      = 'OpenSea'
+      saleEntity.save()
       
-    
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
       // This will derives the amount per transfer (eg each nft's amount in a bundle with 2 NFT's is the total price divided by 2.)
-      let transferAmount       = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
+      let transferAmount      = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
       
       //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
       //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
-      MatchTransferWithSale(
-          tx.transfers, //string is not a string[]
-          transferAmount,
-          tx.id
-      )
+
+      if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
+        MatchTransferWithSale(
+            tx.transfers, 
+            transferAmount,
+            tx.id,
+            saleEntity.id
+        )
+      } 
 
       //7. Save sale and save transaction
-      saleEntity.save()
+      //saleEntity.save()
 
       //8. Update daily/weekly/monthly metrics 
   
