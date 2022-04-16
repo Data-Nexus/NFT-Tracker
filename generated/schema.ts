@@ -625,7 +625,8 @@ export class transaction extends Entity {
 
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
-    this.set("unmatchedTransfersEventNum", Value.fromI32(0));
+    this.set("unmatchedTransferCount", Value.fromI32(0));
+    this.set("unmatchedTransferId", Value.fromString(""));
   }
 
   save(): void {
@@ -671,30 +672,22 @@ export class transaction extends Entity {
     this.set("blockNumber", Value.fromBigInt(value));
   }
 
-  get unmatchedTransfersEventNum(): i32 {
-    let value = this.get("unmatchedTransfersEventNum");
+  get unmatchedTransferCount(): i32 {
+    let value = this.get("unmatchedTransferCount");
     return value!.toI32();
   }
 
-  set unmatchedTransfersEventNum(value: i32) {
-    this.set("unmatchedTransfersEventNum", Value.fromI32(value));
+  set unmatchedTransferCount(value: i32) {
+    this.set("unmatchedTransferCount", Value.fromI32(value));
   }
 
-  get unmatchedTransferEventId(): string | null {
-    let value = this.get("unmatchedTransferEventId");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+  get unmatchedTransferId(): string {
+    let value = this.get("unmatchedTransferId");
+    return value!.toString();
   }
 
-  set unmatchedTransferEventId(value: string | null) {
-    if (!value) {
-      this.unset("unmatchedTransferEventId");
-    } else {
-      this.set("unmatchedTransferEventId", Value.fromString(<string>value));
-    }
+  set unmatchedTransferId(value: string) {
+    this.set("unmatchedTransferId", Value.fromString(value));
   }
 
   get transfers(): Array<string> | null {

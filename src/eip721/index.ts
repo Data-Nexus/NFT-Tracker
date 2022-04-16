@@ -60,17 +60,17 @@ export function handleTransfer(event: TransferEvent): void {
 		let tx = transaction.load(event.transaction.hash.toHexString())
 		if (tx != null) {
 			
-			let newTransferNum = tx.unmatchedTransfersEventNum + 1 
+			let newTransferCount = tx.unmatchedTransferCount + 1 
 			
 			//add event id to array to later identify transfer event if/when sale occurs
-			let newTransferArray = tx.unmatchedTransferEventId
+			let newTransferArray = tx.unmatchedTransferId
 			if (newTransferArray == null) {
 				newTransferArray = event.logIndex.toString()
 			} 
-			else {newTransferArray = tx.unmatchedTransferEventId + ',' + event.logIndex.toString()}
+			else {newTransferArray = tx.unmatchedTransferId + ',' + event.logIndex.toString()}
 
-			tx.unmatchedTransfersEventNum = newTransferNum
-			tx.unmatchedTransferEventId = newTransferArray
+			tx.unmatchedTransferCount = newTransferCount
+			tx.unmatchedTransferId = newTransferArray
 			tx.save()
 			
 		}

@@ -140,11 +140,11 @@ type transaction @entity {
   " Block Number "
   blockNumber:	BigInt!
   
-  " Integer value of how many transfers were not matched to a sale "
-  unmatchedTransfersEventNum: Int!
+  " Count of how many transfers were not matched to a sale "
+  unmatchedTransferCount: Int!   
 
   " Array of the event ids for the unmatched transfers "
-  unmatchedTransferEventId: String
+  unmatchedTransferId: String!  
 
   " Transfers that occured within the transaction "
   transfers: [transfer!] @derivedFrom(field: "transaction")

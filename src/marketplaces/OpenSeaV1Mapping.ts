@@ -7,38 +7,37 @@ import {
 } from '../../generated/schema'
 
 import {
+    MatchTransferWithSale
+} from "../../src/utils/matchTransferSale"
+
+import {
 	OrdersMatched,
 } from '../../generated/OpenseaV1/OpenSeaV1'
 
 import {
 	constants,
-    events,
-	transactions,
 } from '../../src/graphprotocol-utils'
 
 import { 
     BigDecimal, 
-    BigInt,
-    log,
 } from "@graphprotocol/graph-ts"
 
 // TakerAsk Handler starts here
 export function handleOSv1Sale(event: OrdersMatched): void {
   
   //1. load transaction
-  //temporarily using event.transaction.hash.toHexString() instead of transactions.log(event).id
   let tx = transaction.load(event.transaction.hash.toHexString()) 
   
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
   if (tx != null && event.transaction.value != constants.BIGINT_ZERO) {
     
     //3. create new sale entity (id = tx hash - eventId)  
-    let saleEntity = sale.load(transactions.log(event).id + '-' + event.logIndex.toString())
+    let saleEntity = sale.load(tx.id + '-' + event.logIndex.toString())
     if (saleEntity == null) {
     
       //4. Assign currency address, amount, txId and platform to sale entity
-      let saleEntity = new sale(transactions.log(event).id + '-' + event.logIndex.toString())
-      saleEntity.transaction = transactions.log(event).id
+      let saleEntity = new sale(tx.id + '-' + event.logIndex.toString())
+      saleEntity.transaction = tx.id
       saleEntity.currency = 'ETH'
 
       //Amount to adjust to params.price once we have a solution for multi-currency
@@ -47,12 +46,16 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       saleEntity.platform = 'OpenSea'
       
     
-      //5. Assign sale.amount / transaction.unmatchedTransfersEventNum to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)
-    
-      //let transferAmount  = saleEntity.amount.div(tx.unmatchedTransfersEventNum)  
-        
-      //6. Using unmatchedTransferEventId loop through the transfer entities and apply the transferAmount and assign saleId , reducing the unmatchedTransfersEventNum by 1 and removing the id from transaction.unmatchedTransferEventId. save transfer update on each loop.
+      //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)
+      let transferAmount  = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
       
+      //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , reducing the unmatchedTransferCount by 1 and removing the id from transaction.unmatchedTransferEventId. save transfer update on each loop.
+      MatchTransferWithSale(
+          tx.unmatchedTransferId, //string is not a string[]
+          tx.id, 
+          transferAmount
+      )
+
       //7. Save sale and save transaction
       saleEntity.save()
 
