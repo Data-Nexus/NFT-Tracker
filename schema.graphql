@@ -123,7 +123,7 @@ type sale @entity {
   currency: String 
 
   " the amount of the sale "
-  amount: BigDecimal
+  amount: BigDecimal!
 
   " The marketplace "	
   platform: String		
@@ -142,9 +142,6 @@ type transaction @entity {
   
   " Count of how many transfers were not matched to a sale "
   unmatchedTransferCount: Int!   
-
-  " Array of the event ids for the unmatched transfers "
-  unmatchedTransferId: String!  
 
   " Transfers that occured within the transaction "
   transfers: [transfer!]! @derivedFrom(field: "transaction")

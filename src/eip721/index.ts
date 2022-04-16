@@ -61,16 +61,7 @@ export function handleTransfer(event: TransferEvent): void {
 		if (tx != null) {
 			
 			let newTransferCount = tx.unmatchedTransferCount + 1 
-			
-			//add event id to array to later identify transfer event if/when sale occurs
-			let newTransferArray = tx.unmatchedTransferId
-			if (newTransferArray == null) {
-				newTransferArray = event.logIndex.toString()
-			} 
-			else {newTransferArray = tx.unmatchedTransferId + ',' + event.logIndex.toString()}
-
 			tx.unmatchedTransferCount = newTransferCount
-			tx.unmatchedTransferId = newTransferArray
 			tx.save()
 			
 		}

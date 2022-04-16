@@ -50,10 +50,11 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       let transferAmount       = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
       
       //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
-      //reducing the unmatchedTransferCount by 1 and removing the id from transaction.unmatchedTransferEventId. save transfer update on each loop.
+      //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
       MatchTransferWithSale(
           tx.transfers, //string is not a string[]
-          transferAmount
+          transferAmount,
+          tx.id
       )
 
       //7. Save sale and save transaction

@@ -530,6 +530,7 @@ export class sale extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("transaction", Value.fromString(""));
+    this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -583,21 +584,13 @@ export class sale extends Entity {
     }
   }
 
-  get amount(): BigDecimal | null {
+  get amount(): BigDecimal {
     let value = this.get("amount");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigDecimal();
-    }
+    return value!.toBigDecimal();
   }
 
-  set amount(value: BigDecimal | null) {
-    if (!value) {
-      this.unset("amount");
-    } else {
-      this.set("amount", Value.fromBigDecimal(<BigDecimal>value));
-    }
+  set amount(value: BigDecimal) {
+    this.set("amount", Value.fromBigDecimal(value));
   }
 
   get platform(): string | null {
@@ -626,7 +619,6 @@ export class transaction extends Entity {
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
     this.set("unmatchedTransferCount", Value.fromI32(0));
-    this.set("unmatchedTransferId", Value.fromString(""));
   }
 
   save(): void {
@@ -679,15 +671,6 @@ export class transaction extends Entity {
 
   set unmatchedTransferCount(value: i32) {
     this.set("unmatchedTransferCount", Value.fromI32(value));
-  }
-
-  get unmatchedTransferId(): string {
-    let value = this.get("unmatchedTransferId");
-    return value!.toString();
-  }
-
-  set unmatchedTransferId(value: string) {
-    this.set("unmatchedTransferId", Value.fromString(value));
   }
 
   get transfers(): Array<string> {
