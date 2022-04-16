@@ -28,13 +28,15 @@ Handle sale should:
 
 ~~4. Assign currency address, amount, txId and platform to sale entity~~
 
-5. Assign sale.amount / transaction.unmatchedTransfersEventNum to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)
+~~5. Assign sale.amount / transaction.unmatchedTransfersEventNum to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)~~
 
-6. Using unmatchedTransferEventId loop through the transfer entities and apply the transferAmount and assign saleId , reducing the unmatchedTransfersEventNum by 1 and removing the id from transaction.unmatchedTransferEventId. save transfer update on each loop.
+6. Using transaction.transfers loop through the transfer entities: and apply the transferAmount and assign saleId, reducing the unmatchedTransfersCount by 1. save transfer update on each loop.
 
-7. Save sale and save transaction
+7. Load token and collection. On each loop, update the token.lastPrice and if applicable token.topSale. Save token and collection on each loop.
 
-8. Update daily/weekly/monthly metrics 
+8. Update daily/weekly/monthly metrics (loop end)
+
+9. Save sale and save transaction
 
 # Metrics 
 
