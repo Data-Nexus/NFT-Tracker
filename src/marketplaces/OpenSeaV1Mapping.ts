@@ -37,22 +37,22 @@ export function handleOSv1Sale(event: OrdersMatched): void {
     
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(tx.id + '-' + event.logIndex.toString())
-      saleEntity.transaction = tx.id
-      saleEntity.currency = 'ETH'
+      saleEntity.transaction   = tx.id
+      saleEntity.currency      = 'ETH'
 
       //Amount to adjust to params.price once we have a solution for multi-currency
-      //event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000'))
-      saleEntity.amount = event.transaction.value.divDecimal(BigDecimal.fromString('1000000000000000000')) 
-      saleEntity.platform = 'OpenSea'
+      saleEntity.amount        = event.transaction.value.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+      saleEntity.platform      = 'OpenSea'
       
     
-      //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)
-      let transferAmount  = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
+      //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
+      // This will derives the amount per transfer (eg each nft's amount in a bundle with 2 NFT's is the total price divided by 2.)
+      let transferAmount       = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
       
-      //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , reducing the unmatchedTransferCount by 1 and removing the id from transaction.unmatchedTransferEventId. save transfer update on each loop.
+      //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
+      //reducing the unmatchedTransferCount by 1 and removing the id from transaction.unmatchedTransferEventId. save transfer update on each loop.
       MatchTransferWithSale(
-          tx.unmatchedTransferId, //string is not a string[]
-          tx.id, 
+          tx.transfers, //string is not a string[]
           transferAmount
       )
 

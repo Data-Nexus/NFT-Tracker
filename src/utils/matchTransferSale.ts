@@ -3,20 +3,14 @@ import { BigDecimal } from "@graphprotocol/graph-ts"
 import { transfer } from "../../generated/schema"
 
 export function MatchTransferWithSale(
-    eventNum: Array<string>,
-    tx: string,
-    amount: BigDecimal
-    ) {
-      let events : Array<string> = eventNum
+    TransferId: Array<string>,
+    amount: BigDecimal,
+    ): void {
       
-      for (let index = 0; index < eventNum.length; index++) {
-        
-        // Determine current node ID.
-        let eventNumber = <string>events[index]
-        if (events == null) continue
-    
+      for (let index = 0; index < TransferId.length; index++) {
+                
         // Load the indexed transfer.
-        let transferEntity = transfer.load(tx + '-' + eventNumber)//need to add + [event from array] 
+        let transferEntity = transfer.load(TransferId[index])
         if (transferEntity != null) {
         
         // Update transfer amount

@@ -30,8 +30,8 @@ export namespace transactions {
 		let tx = new transaction(event.transaction.hash.toHexString())
 		tx.timestamp   = event.block.timestamp
 		tx.blockNumber = event.block.number
-        tx.unmatchedTransfersEventNum = 0
-        tx.unmatchedTransferEventId = ''
+        tx.unmatchedTransferCount = 0
+        tx.unmatchedTransferId = ''
 		tx.save()
 		return tx as transaction
 	}

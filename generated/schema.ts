@@ -690,21 +690,13 @@ export class transaction extends Entity {
     this.set("unmatchedTransferId", Value.fromString(value));
   }
 
-  get transfers(): Array<string> | null {
+  get transfers(): Array<string> {
     let value = this.get("transfers");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set transfers(value: Array<string> | null) {
-    if (!value) {
-      this.unset("transfers");
-    } else {
-      this.set("transfers", Value.fromStringArray(<Array<string>>value));
-    }
+  set transfers(value: Array<string>) {
+    this.set("transfers", Value.fromStringArray(value));
   }
 
   get sales(): Array<string> | null {
