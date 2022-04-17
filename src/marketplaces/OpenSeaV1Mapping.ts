@@ -40,9 +40,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       saleEntity.transaction   = tx.id
       saleEntity.currency      = 'ETH'
       saleEntity.platform      = 'OpenSea'
-
-      //Amount to adjust to params.price once we have a solution for multi-currency
-      saleEntity.amount        = event.transaction.value.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+      saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
       saleEntity.save()
       
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -51,7 +49,6 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       
       //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
       //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
-
       if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
                 
         let array = tx.transfers

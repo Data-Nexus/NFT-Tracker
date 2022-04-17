@@ -4,6 +4,8 @@ import {constants} from '../../src/graphprotocol-utils'
 import { 
   transfer,
   transaction, 
+  token,
+  collection,
 } from "../../generated/schema"
 
 
@@ -24,17 +26,40 @@ export function MatchTransferWithSale(
         let transactionEntity = transaction.load(TransactionId)
         if (transactionEntity) {
         
-              // Update transfer amount
-              transferEntity.amount = amount 
-              transferEntity.matchedSale = SaleId
-          
-              // Decrease unmatched transfer count by one (in case of batch sales in single transaction)
-              transactionEntity.unmatchedTransferCount = transactionEntity.unmatchedTransferCount - 1
-             
-        
-          transactionEntity.save()
+          // Update transfer values
+          transferEntity.amount = amount 
+          transferEntity.matchedSale = SaleId
           transferEntity.save()
-            
+
+          // Decrease unmatched transfer count by one (in case of batch sales in single transaction)
+          transactionEntity.unmatchedTransferCount = transactionEntity.unmatchedTransferCount - 1
+          transactionEntity.save()
+
+          // Update token metrics
+          let tokenEntity = token.load(transferEntity.token)
+          if (tokenEntity) {
+            tokenEntity.lastPrice = amount 
+
+            if (amount > tokenEntity.topSale) {
+              tokenEntity.topSale = amount
+            }
+          
+            tokenEntity.save()
+          }
+          
+          // Update collection metrics
+          let collectionEntity = collection.load(transferEntity.collection)
+          if (collectionEntity) {
+            collectionEntity.totalSales = collectionEntity.totalSales + 1
+            collectionEntity.totalVolume = collectionEntity.totalVolume.plus(amount)
+
+            if (amount > collectionEntity.topSale) {
+              collectionEntity.topSale = amount
+            }
+
+            collectionEntity.save()
+          }
+          
         }
       }
     }
