@@ -33,7 +33,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
     
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
-    if (!saleEntity) {
+    if (!saleEntity && tx.unmatchedTransferCount > 0) {
     
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
