@@ -124,6 +124,7 @@ export class collection extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("totalSales", Value.fromI32(0));
     this.set("totalVolume", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
   }

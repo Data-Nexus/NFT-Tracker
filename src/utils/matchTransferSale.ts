@@ -1,4 +1,4 @@
-import { BigDecimal, log } from "@graphprotocol/graph-ts"
+import { BigDecimal } from "@graphprotocol/graph-ts"
 import {constants} from '../../src/graphprotocol-utils'
 
 import { 
@@ -16,8 +16,6 @@ export function MatchTransferWithSale(
   SaleId: string,
   ): void {
     
-    log.info('made it to the loop',[])
-
      if (TransferId && amount && TransactionId && SaleId) {
        
       // Load the indexed transfer.
@@ -29,10 +27,11 @@ export function MatchTransferWithSale(
           // Update transfer values
           transferEntity.amount = amount 
           transferEntity.matchedSale = SaleId
-          transferEntity.save()
-
+          
           // Decrease unmatched transfer count by one (in case of batch sales in single transaction)
           transactionEntity.unmatchedTransferCount = transactionEntity.unmatchedTransferCount - 1
+          
+          transferEntity.save()
           transactionEntity.save()
 
           // Update token metrics

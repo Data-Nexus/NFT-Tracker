@@ -41,11 +41,14 @@ export function fetchRegistry(address: Address): collection {
 		let collectionEntity = collection.load(contractEntity.id)
 		if (collectionEntity == null) {
 			collectionEntity = new collection(contractEntity.id)
-			let try_name              = erc721.try_name()
-			let try_symbol            = erc721.try_symbol()
+			let try_name              		  = erc721.try_name()
+			let try_symbol            		  = erc721.try_symbol()
 			collectionEntity.name             = try_name.reverted   ? '' : try_name.value
 			collectionEntity.symbol           = try_symbol.reverted ? '' : try_symbol.value
 			collectionEntity.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
+			collectionEntity.totalSales 	  = 0
+			collectionEntity.totalVolume 	  = constants.BIGDECIMAL_ZERO
+			collectionEntity.topSale	 	  = constants.BIGDECIMAL_ZERO
 		}
 		return collectionEntity as collection
 	//}
@@ -63,6 +66,8 @@ export function fetchToken(collection: collection, id: BigInt): token {
 		tokenEntity            = new token(tokenid)
 		tokenEntity.collection = collection.id
 		tokenEntity.identifier = id
+		tokenEntity.lastPrice  = constants.BIGDECIMAL_ZERO
+		tokenEntity.topSale	   = constants.BIGDECIMAL_ZERO
 
 		if (collection.supportsMetadata) {
 			let erc721       = IERC721Metadata.bind(Address.fromString(collection.id))
