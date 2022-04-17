@@ -19,10 +19,6 @@ import {
 	transactions,
 } from '../../src/graphprotocol-utils'
 
-import { 
-	log 
-} from '@graphprotocol/graph-ts';
-
 export function handleTransfer(event: TransferEvent): void {
 	
 	let collection = fetchRegistry(event.address)
@@ -48,25 +44,25 @@ export function handleTransfer(event: TransferEvent): void {
 		senderAddress.save()
 		receiverAddress.save()
 
-		let ev = new transfer(events.id(event))
-		ev.transaction 			= transactions.log(event).id
-		ev.token       			= token.id
-		ev.tokenId     			= token.id	//added for testing
-		ev.collection			= collection.id
-		ev.senderAddress        = senderAddress.id
-		ev.receiverAddress      = receiverAddress.id
-		ev.amount 				= constants.BIGDECIMAL_ZERO
-		ev.save()
+		let transferEntity = new transfer(events.id(event))
+		transferEntity.transaction 			= transactions.log(event).id
+		transferEntity.token       			= token.id
+		transferEntity.tokenId     			= token.id	//added for testing
+		transferEntity.collection			= collection.id
+		transferEntity.senderAddress        = senderAddress.id
+		transferEntity.receiverAddress      = receiverAddress.id
+		transferEntity.amount 				= constants.BIGDECIMAL_ZERO
+		transferEntity.save()
 
 		let tx = transaction.load(event.transaction.hash.toHexString())
 		if (tx != null) {
 			
-			let array = tx.transfers 
-			array.push(ev.id)
+			let transferArray = tx.transfers 
+			transferArray.push(transferEntity.id)
 			
 			let newTransferCount = tx.unmatchedTransferCount + 1 
 			tx.unmatchedTransferCount = newTransferCount
-			tx.transfers = array 
+			tx.transfers = transferArray 
 			tx.save()
 			
 		}

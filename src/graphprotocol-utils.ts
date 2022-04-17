@@ -27,12 +27,18 @@ export namespace constants {
 
 export namespace transactions {
 	export function log(event: ethereum.Event): transaction {
-		let tx = new transaction(event.transaction.hash.toHexString())
-		tx.timestamp   = event.block.timestamp
-		tx.blockNumber = event.block.number
-        tx.unmatchedTransferCount = 0
-		tx.transfers = new Array<string>()
-		tx.save()
+		
+		let tx = transaction.load(event.transaction.hash.toHexString())
+		if (!tx) {
+			
+			tx = new transaction(event.transaction.hash.toHexString())
+			tx.timestamp   = event.block.timestamp
+			tx.blockNumber = event.block.number
+        	tx.unmatchedTransferCount = 0
+			tx.transfers = new Array<string>()
+			tx.save()
+			}
+
 		return tx as transaction
 	}
 	export type Tx = transaction
