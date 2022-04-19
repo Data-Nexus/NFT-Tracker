@@ -8,9 +8,8 @@ dataSources:
     name: IERC721
     network: mainnet
     source:
-      address: "0xDb3B2e1F699CaF230eE75bfBE7d97d70F81bC945"
       abi: IERC721
-      startBlock: 13669757
+      startBlock: 5774644
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -34,13 +33,15 @@ dataSources:
     source:
       address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
       abi: OpenSeaV1
-      startBlock: 13671800
+      startBlock: 5774644
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Token
+        - collection
+        - token
+        - sale
       abis:
         - name: OpenSeaV1
           file: OpenSeaV1\abis\OpenSeaV1.json
@@ -61,7 +62,9 @@ dataSources:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Token
+        - collection
+        - token
+        - sale
       abis:
         - name: OpenSeaV2
           file: OpenSeaV2\abis\OpenSeaV2.json
@@ -84,7 +87,7 @@ dataSources:
       entities:
         - collection
         - token
-        - transfer
+        - sale
       abis:
         - name: LooksRare
           file: LooksRare\abis\LooksRare.json
@@ -96,3 +99,25 @@ dataSources:
             address,address,address,uint256,uint256,uint256)
           handler: handleTakerBid
       file: LooksRare\LooksRare.wasm
+  - kind: ethereum
+    name: X2Y2
+    network: mainnet
+    source:
+      address: "0x6d7812d41a08bc2a910b562d8b56411964a4ed88"
+      abi: X2Y2
+      startBlock: 14139150
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - collection
+        - token
+        - sale
+      abis:
+        - name: X2Y2
+          file: X2Y2\abis\X2Y2.json
+      eventHandlers:
+        - event: EvProfit(bytes32,address,address,uint256)
+          handler: handleEvProfit
+      file: X2Y2\X2Y2.wasm

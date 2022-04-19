@@ -9,9 +9,9 @@ dataSources:
     name: IERC721
     network: mainnet
     source:
-      address: "0xDb3B2e1F699CaF230eE75bfBE7d97d70F81bC945" ##added for testing
+      ##address: "0xDb3B2e1F699CaF230eE75bfBE7d97d70F81bC945" ##added for testing
       abi: IERC721
-      startBlock: 13669757 ##5774644 changed for testing 
+      startBlock: 5774644 ##13669757 for testing 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,13 +36,15 @@ dataSources:
     source:
       address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
       abi: OpenSeaV1
-      startBlock: 13671800 ##5774644 changed for testing 
+      startBlock: 5774644 ##13671800 for testing 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Token
+        - collection
+        - token
+        - sale
       abis:
         - name: OpenSeaV1
           file: ./abis/OpenSeaV1.json
@@ -62,7 +64,9 @@ dataSources:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Token
+        - collection
+        - token
+        - sale
       abis:
         - name: OpenSeaV2
           file: ./abis/OpenSeaV2.json
@@ -87,7 +91,7 @@ dataSources:
       entities:
         - collection
         - token
-        - transfer
+        - sale
       abis:
         - name: LooksRare
           file: ./abis/LooksRare.json
@@ -97,3 +101,28 @@ dataSources:
         - event: TakerBid(bytes32,uint256,indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256)
           handler: handleTakerBid
       file: ./src/marketplaces/LooksRareMappings.ts
+
+  #### X2Y2 Contract ####
+  - kind: ethereum
+    name: X2Y2
+    network: mainnet
+    source:
+      address: "0x6d7812d41a08bc2a910b562d8b56411964a4ed88"
+      abi: X2Y2
+      startBlock: 14139150
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - collection
+        - token
+        - sale
+      abis:
+        - name: X2Y2
+          file: ./abis/X2Y2.json
+      eventHandlers:
+        - event: EvProfit(bytes32,address,address,uint256)
+          handler: handleEvProfit
+      file: ./src/marketplaces/X2Y2Mappings.ts
+
