@@ -385,6 +385,7 @@ export class transfer extends Entity {
     this.set("transaction", Value.fromString(""));
     this.set("collection", Value.fromString(""));
     this.set("token", Value.fromString(""));
+    this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
@@ -440,23 +441,6 @@ export class transfer extends Entity {
     this.set("token", Value.fromString(value));
   }
 
-  get tokenId(): string | null {
-    let value = this.get("tokenId");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set tokenId(value: string | null) {
-    if (!value) {
-      this.unset("tokenId");
-    } else {
-      this.set("tokenId", Value.fromString(<string>value));
-    }
-  }
-
   get senderAddress(): string | null {
     let value = this.get("senderAddress");
     if (!value || value.kind == ValueKind.NULL) {
@@ -489,6 +473,15 @@ export class transfer extends Entity {
     } else {
       this.set("receiverAddress", Value.fromString(<string>value));
     }
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value!.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
   }
 
   get amount(): BigDecimal {

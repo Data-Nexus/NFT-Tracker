@@ -94,15 +94,15 @@ type transfer @entity {
     
     " The collection addrress - The token id "
     token: token!
-
-    " The id of the NFT"
-    tokenId: String
     
 	" The sender address "
     senderAddress: account
     
     " The receiver address "
     receiverAddress: account
+    
+    " Block Number "
+    blockNumber: BigInt!
 
 	" The amount of ETH paid"
     amount: BigDecimal!

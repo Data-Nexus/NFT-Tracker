@@ -15,7 +15,7 @@ import {
 } from '../../generated/OpenseaV1/OpenSeaV1'
 
 import {
-	constants,
+	constants, events,
 } from '../../src/graphprotocol-utils'
 
 import { 
@@ -29,8 +29,9 @@ export function handleOSv1Sale(event: OrdersMatched): void {
   let tx = transaction.load(event.transaction.hash.toHexString())
   
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
-  if (tx && event.transaction.value != constants.BIGINT_ZERO) {
-    
+  //&& event.transaction.value != constants.BIGINT_ZERO && event.params.buyHash != ) {
+  if (tx ){
+
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
@@ -38,7 +39,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
-      saleEntity.currency      = 'ETH'
+      saleEntity.currency      = ''
       saleEntity.platform      = 'OpenSea'
       saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
       saleEntity.save()

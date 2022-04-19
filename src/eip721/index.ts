@@ -47,10 +47,10 @@ export function handleTransfer(event: TransferEvent): void {
 		let transferEntity = new transfer(events.id(event))
 		transferEntity.transaction 			= transactions.log(event).id
 		transferEntity.token       			= token.id
-		transferEntity.tokenId     			= token.id	//added for testing
 		transferEntity.collection			= collection.id
 		transferEntity.senderAddress        = senderAddress.id
 		transferEntity.receiverAddress      = receiverAddress.id
+		transferEntity.blockNumber 			= event.block.number
 		transferEntity.amount 				= constants.BIGDECIMAL_ZERO
 		transferEntity.save()
 
