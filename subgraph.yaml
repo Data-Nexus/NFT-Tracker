@@ -4,6 +4,7 @@ repository: https://github.com/Data-Nexus/nft-sales-v2
 schema:
   file: ./schema.graphql
 dataSources:
+  #### All ERC721 ####
   - kind: ethereum/contract
     name: IERC721
     network: mainnet
@@ -28,7 +29,7 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/eip721/index.ts
-  #### OpenSea Contracts
+  #### OpenSea Contracts ####
   - kind: ethereum/contract
     name: OpenSeaV1
     network: mainnet
@@ -55,7 +56,7 @@ dataSources:
     source:
       address: "0x7f268357A8c2552623316e2562D90e642bB538E5"
       abi: OpenSeaV2
-      startBlock: 13671800 ##5774644 changed for testing 
+      startBlock: 14120913
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -68,4 +69,31 @@ dataSources:
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
           handler: handleOSv1Sale
-      file: ./src/marketplaces/OpenSeaV1Mapping.ts ##event is identical in v2
+      ##event is identical in v2
+      file: ./src/marketplaces/OpenSeaV1Mapping.ts 
+
+  #### LooksRare Contract ####
+  - kind: ethereum
+    name: LooksRare
+    network: mainnet
+    source:
+      address: "0x59728544B08AB483533076417FbBB2fD0B17CE3a"
+      abi: LooksRare
+      startBlock: 13885625
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - collection
+        - token
+        - transfer
+      abis:
+        - name: LooksRare
+          file: ./abis/LooksRare.json
+      eventHandlers:
+        - event: TakerAsk(bytes32,uint256,indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256)
+          handler: handleTakerAsk
+        - event: TakerBid(bytes32,uint256,indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256)
+          handler: handleTakerBid
+      file: ./src/marketplaces/LooksRareMappings.ts

@@ -55,7 +55,7 @@ dataSources:
     source:
       address: "0x7f268357A8c2552623316e2562D90e642bB538E5"
       abi: OpenSeaV2
-      startBlock: 13671800
+      startBlock: 14120913
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -70,3 +70,29 @@ dataSources:
             bytes32)
           handler: handleOSv1Sale
       file: OpenSeaV1\OpenSeaV1.wasm
+  - kind: ethereum
+    name: LooksRare
+    network: mainnet
+    source:
+      address: "0x59728544B08AB483533076417FbBB2fD0B17CE3a"
+      abi: LooksRare
+      startBlock: 13885625
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - collection
+        - token
+        - transfer
+      abis:
+        - name: LooksRare
+          file: LooksRare\abis\LooksRare.json
+      eventHandlers:
+        - event: TakerAsk(bytes32,uint256,indexed address,indexed address,indexed
+            address,address,address,uint256,uint256,uint256)
+          handler: handleTakerAsk
+        - event: TakerBid(bytes32,uint256,indexed address,indexed address,indexed
+            address,address,address,uint256,uint256,uint256)
+          handler: handleTakerBid
+      file: LooksRare\LooksRare.wasm

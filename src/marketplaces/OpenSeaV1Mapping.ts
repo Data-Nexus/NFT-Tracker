@@ -1,8 +1,5 @@
 import {
 	sale,
-  collection,
-  token,
-	transfer,
 	transaction,
 } from '../../generated/schema'
 
@@ -11,7 +8,7 @@ import {
 } from "../../src/utils/matchTransferSale"
 
 import {
-	OrdersMatched,
+  OrdersMatched,
 } from '../../generated/OpenseaV1/OpenSeaV1'
 
 import {
@@ -36,10 +33,13 @@ export function handleOSv1Sale(event: OrdersMatched): void {
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
     
+      let currency = 'ERC20'
+      if (event.transaction.value != constants.BIGINT_ZERO) {currency = 'ETH'}
+
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
-      saleEntity.currency      = ''
+      saleEntity.currency      = currency
       saleEntity.platform      = 'OpenSea'
       saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
       saleEntity.save()
@@ -66,14 +66,8 @@ export function handleOSv1Sale(event: OrdersMatched): void {
           
         }
       }
-
-      //8. Update daily/weekly/monthly metrics 
-  
     }
   }
-
-  //else log.error('OpenSeaV1 Mapping errored from transaction: ' + event.transaction.hash.toHexString(), [])
-
 }
 
 

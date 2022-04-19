@@ -8,39 +8,8 @@ Key Assumption made in this logic is that every marketplace calls an NFT contrac
 
 # TODO:
 
-# Schema TODO
+Data Validation steps. Then dig into other contracts to listen to.
 
-Update transaction entity to be able to step into sales & transfers. (thus allowing consumer to query top 10 most recent transactions)
-
-# Model handleSale event logic 
-
-(Will be replicated for each marketplace, ideally we can call this as a utility function)
-
-Important!: determine how to handle transfers that occur in other currencies. [example tx](https://etherscan.io/tx/0x53bb87195e5b8235e5bd51228b37b8f9685ea555c0b0aae5228d74e19652b316)
-
-Handle sale should:
-
-~~1. load transaction~~
-
-~~2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?~~
-
-~~3. create new sale entity (id = tx hash - eventId)~~
-
-~~4. Assign currency address, amount, txId and platform to sale entity~~
-
-~~5. Assign sale.amount / transaction.unmatchedTransfersEventNum to variable transferAmount to pass into transfer entities (this is usually going to be 1, but in the event of a bundle sale there could be N+1 transfers for a single OrdersMatched)~~
-
-6. Using transaction.transfers loop through the transfer entities: and apply the transferAmount and assign saleId, reducing the unmatchedTransfersCount by 1. save transfer update on each loop.
-
-7. Load token and collection. On each loop, update the token.lastPrice and if applicable token.topSale. Save token and collection on each loop.
-
-8. Update daily/weekly/monthly metrics (loop end)
-
-9. Save sale and save transaction
-
-# Metrics 
-
-Using the existing logic from [nft-sales-subgraph](https://github.com/Data-Nexus/nft-sales-subgraph/blob/3e1dab1478341f51377c88f538651dce78324a70/src/LooksRareSale.ts#L98) (lines 98-222), incorporate collection metrics and daily/weekly/monthly snapshots.
 
 # OpenSea
 
@@ -54,11 +23,6 @@ Various Transaction Type examples:
 
 
 # LooksRare:
-
-Add handleLRTakerAsk sale event in mappings
-
-Add handleLRTakerBid sale event in mappings
-
 
 Various Transaction Type examples:
 
