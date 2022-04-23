@@ -55,7 +55,10 @@ export function handleTransfer(event: TransferEvent): void {
 		transferEntity.save()
 
 		let tx = transaction.load(event.transaction.hash.toHexString())
-		if (tx != null) {
+		if (tx != null 
+			&& transferEntity.senderAddress != '0x83c8f28c26bf6aaca652df1dbbe0e1b56f8baba2' //Gem.xyz Aggregator
+			&& transferEntity.senderAddress != '0x0a267cf51ef038fc00e71801f5a524aec06e4f07' //Genie Aggregator
+			) {
 			
 			let transferArray = tx.transfers 
 			transferArray.push(transferEntity.id)

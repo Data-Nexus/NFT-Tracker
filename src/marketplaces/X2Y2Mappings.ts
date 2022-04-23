@@ -11,12 +11,8 @@ import {
   EvProfit
 } from '../../generated/X2Y2/X2Y2'
 
-import {
-	constants, events,
-} from '../../src/graphprotocol-utils'
-
 import { 
-  BigDecimal, log, 
+  BigDecimal
 } from "@graphprotocol/graph-ts"
 
 // TakerBid Handler starts here
@@ -43,7 +39,8 @@ export function handleEvProfit(event: EvProfit): void {
       saleEntity.transaction   = tx.id
       saleEntity.currency      = currency
       saleEntity.platform      = 'X2Y2'
-      saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+      //X2Y2 emites the profit amount instead of the total price, added / 0.98 to get the full sale price
+      saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString('1000000000000000000')).div(BigDecimal.fromString('0.98')) 
       saleEntity.save()
       
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -63,7 +60,7 @@ export function handleEvProfit(event: EvProfit): void {
             trId, 
             transferAmount,
             tx.id,
-            saleEntity.id
+            saleEntity.id,
           )
 
         }

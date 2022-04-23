@@ -13,11 +13,11 @@ import {
 } from '../../generated/LooksRare/LooksRare'
 
 import {
-	constants, events,
+	constants 
 } from '../../src/graphprotocol-utils'
 
 import { 
-  BigDecimal, log, 
+  BigDecimal
 } from "@graphprotocol/graph-ts"
 
 // TakerBid Handler starts here
@@ -33,9 +33,11 @@ export function handleTakerBid(event: TakerBid): void {
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
-    
-      let currency = 'WETH'
-      if (event.transaction.value != constants.BIGINT_ZERO) {currency = 'ETH'}
+      
+      let currencyAddress = event.params.currency.toString()
+      let currency =  'ERC20'
+      if (currencyAddress = '0x0000000000000000000000000000000000000000') {currency = 'ETH'}
+      if (currencyAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {currency = 'WETH'}
 
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
@@ -52,7 +54,7 @@ export function handleTakerBid(event: TakerBid): void {
       //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
       //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
       if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
-                
+        
         let array = tx.transfers
         for (let index = 0; index < array.length; index++) {
 
@@ -62,7 +64,7 @@ export function handleTakerBid(event: TakerBid): void {
             trId, 
             transferAmount,
             tx.id,
-            saleEntity.id
+            saleEntity.id,
           )
 
         }
@@ -114,7 +116,7 @@ export function handleTakerAsk(event: TakerAsk): void {
               trId, 
               transferAmount,
               tx.id,
-              saleEntity.id
+              saleEntity.id,
             )
   
           }

@@ -12,11 +12,11 @@ import {
 } from '../../generated/OpenseaV1/OpenSeaV1'
 
 import {
-	constants, events,
+	constants
 } from '../../src/graphprotocol-utils'
 
 import { 
-  BigDecimal, log, 
+  BigDecimal
 } from "@graphprotocol/graph-ts"
 
 // TakerAsk Handler starts here
@@ -61,7 +61,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
             trId, 
             transferAmount,
             tx.id,
-            saleEntity.id
+            saleEntity.id,
           )
           
         }
