@@ -39,21 +39,35 @@ export function handleTransfer(event: TransferEvent): void {
 		}		
 		
 		let senderAccountCollection = accountCollection.load(senderAddress.id + '-' + collection.id)
-		if (senderAccountCollection) {
+		if (senderAccountCollection && senderAddress.id != "0x0000000000000000000000000000000000000000") {
 
-			senderAccountCollection.tokenCount 	 = senderAccountCollection.tokenCount - 1
+			let senderTokenCountNew = senderAccountCollection.tokenCount - 1
+
+			senderAccountCollection.tokenCount 	 = senderTokenCountNew
 			
 			let senderTransactionArray = senderAccountCollection.transactions 
 			senderTransactionArray.push(event.transaction.hash.toHexString())
-				
+			
+			senderAccountCollection.save()
 		}
 
-		let receiverAccountCollection = accountCollection.load(senderAddress.id + '-' + collection.id)
-		if (!receiverAccountCollection) {
+		let receiverAccountCollection = accountCollection.load(receiverAddress.id + '-' + collection.id)
+		if (receiverAccountCollection && receiverAddress.id != "0x0000000000000000000000000000000000000000") {
+			let receiverTransactionArray = receiverAccountCollection.transactions
+			receiverTransactionArray.push(event.transaction.hash.toHexString())
+
+			let receiverTokenCountNew = receiverAccountCollection.tokenCount + 1
+
+			receiverAccountCollection.transactions = receiverTransactionArray
+			receiverAccountCollection.tokenCount = receiverTokenCountNew
+
+			receiverAccountCollection.save()	
 			
+		}
+		if (!receiverAccountCollection && receiverAddress.id != "0x0000000000000000000000000000000000000000") {
 			
-			receiverAccountCollection 			 = new accountCollection(senderAddress.id + '-' + collection.id)
-			receiverAccountCollection.account 	 = senderAddress.id 
+			receiverAccountCollection 			 = new accountCollection(receiverAddress.id + '-' + collection.id)
+			receiverAccountCollection.account 	 = receiverAddress.id 
 			receiverAccountCollection.collection = collection.id
 			receiverAccountCollection.tokenCount = 1 
 						
@@ -62,26 +76,17 @@ export function handleTransfer(event: TransferEvent): void {
 
 			receiverAccountCollection.transactions = receiverTransactionArray
 
+			receiverAccountCollection.save()	
 		} 
-		// if Receiver already has AccountCollection record, push new transaction Id to array and increment by 1
-		else {
-			let receiverTransactionArray = receiverAccountCollection.transactions
-			receiverTransactionArray.push(event.transaction.hash.toHexString())
-
-			receiverAccountCollection.transactions = receiverTransactionArray
-			receiverAccountCollection.tokenCount = receiverAccountCollection.tokenCount + 1  
-			
-		}
 
 
 		token.owner = receiverAddress.id
-
-
 
 		collection.save()
 		token.save()
 		senderAddress.save()
 		receiverAddress.save()
+	
 
 		let transferEntity = new transfer(events.id(event))
 		transferEntity.transaction 			= transactions.log(event).id

@@ -466,6 +466,123 @@ export class accountCollection extends Entity {
   }
 }
 
+export class transaction extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
+    this.set("transactionFrom", Value.fromBytes(Bytes.empty()));
+    this.set("unmatchedTransferCount", Value.fromI32(0));
+    this.set("transfers", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save transaction entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type transaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("transaction", id.toString(), this);
+    }
+  }
+
+  static load(id: string): transaction | null {
+    return changetype<transaction | null>(store.get("transaction", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value!.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get transactionFrom(): Bytes {
+    let value = this.get("transactionFrom");
+    return value!.toBytes();
+  }
+
+  set transactionFrom(value: Bytes) {
+    this.set("transactionFrom", Value.fromBytes(value));
+  }
+
+  get unmatchedTransferCount(): i32 {
+    let value = this.get("unmatchedTransferCount");
+    return value!.toI32();
+  }
+
+  set unmatchedTransferCount(value: i32) {
+    this.set("unmatchedTransferCount", Value.fromI32(value));
+  }
+
+  get transfers(): Array<string> {
+    let value = this.get("transfers");
+    return value!.toStringArray();
+  }
+
+  set transfers(value: Array<string>) {
+    this.set("transfers", Value.fromStringArray(value));
+  }
+
+  get sales(): Array<string> | null {
+    let value = this.get("sales");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set sales(value: Array<string> | null) {
+    if (!value) {
+      this.unset("sales");
+    } else {
+      this.set("sales", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get gasPrice(): BigInt | null {
+    let value = this.get("gasPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set gasPrice(value: BigInt | null) {
+    if (!value) {
+      this.unset("gasPrice");
+    } else {
+      this.set("gasPrice", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
 export class transfer extends Entity {
   constructor(id: string) {
     super();
@@ -683,123 +800,6 @@ export class sale extends Entity {
       this.unset("platform");
     } else {
       this.set("platform", Value.fromString(<string>value));
-    }
-  }
-}
-
-export class transaction extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
-    this.set("transactionFrom", Value.fromBytes(Bytes.empty()));
-    this.set("unmatchedTransferCount", Value.fromI32(0));
-    this.set("transfers", Value.fromStringArray(new Array(0)));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save transaction entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type transaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("transaction", id.toString(), this);
-    }
-  }
-
-  static load(id: string): transaction | null {
-    return changetype<transaction | null>(store.get("transaction", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get("timestamp");
-    return value!.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
-    return value!.toBigInt();
-  }
-
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
-  }
-
-  get transactionFrom(): Bytes {
-    let value = this.get("transactionFrom");
-    return value!.toBytes();
-  }
-
-  set transactionFrom(value: Bytes) {
-    this.set("transactionFrom", Value.fromBytes(value));
-  }
-
-  get unmatchedTransferCount(): i32 {
-    let value = this.get("unmatchedTransferCount");
-    return value!.toI32();
-  }
-
-  set unmatchedTransferCount(value: i32) {
-    this.set("unmatchedTransferCount", Value.fromI32(value));
-  }
-
-  get transfers(): Array<string> {
-    let value = this.get("transfers");
-    return value!.toStringArray();
-  }
-
-  set transfers(value: Array<string>) {
-    this.set("transfers", Value.fromStringArray(value));
-  }
-
-  get sales(): Array<string> | null {
-    let value = this.get("sales");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set sales(value: Array<string> | null) {
-    if (!value) {
-      this.unset("sales");
-    } else {
-      this.set("sales", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
-  get gasPrice(): BigInt | null {
-    let value = this.get("gasPrice");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set gasPrice(value: BigInt | null) {
-    if (!value) {
-      this.unset("gasPrice");
-    } else {
-      this.set("gasPrice", Value.fromBigInt(<BigInt>value));
     }
   }
 }

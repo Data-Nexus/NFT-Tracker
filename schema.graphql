@@ -99,6 +99,33 @@ type accountCollection @entity {
 
 }
 
+type transaction @entity {
+  " the hash of the tx"
+  id: ID!
+  
+  " Timestamp for block "
+  timestamp: BigInt!
+  
+  " Block Number "
+  blockNumber:	BigInt!
+
+  " Address who initiated the transaction "
+  transactionFrom: Bytes! 
+  
+  " Count of how many transfers were not matched to a sale "
+  unmatchedTransferCount: Int!   
+
+  " Transfers that occured within the transaction "
+  transfers: [transfer!]! 
+
+  " Sale events that occured within the transaction "
+  sales: [sale!] @derivedFrom(field: "transaction")
+
+  " Gas Spent "
+  gasPrice: BigInt
+
+}
+
 type transfer @entity {
 
     " Block Number and Event Id in which the transfers event occured"
@@ -145,33 +172,6 @@ type sale @entity {
 
   " The marketplace "	
   platform: String		
-
-}
-
-type transaction @entity {
-  " the hash of the tx"
-  id: ID!
-  
-  " Timestamp for block "
-  timestamp: BigInt!
-  
-  " Block Number "
-  blockNumber:	BigInt!
-
-  " Address who initiated the transaction "
-  transactionFrom: Bytes! 
-  
-  " Count of how many transfers were not matched to a sale "
-  unmatchedTransferCount: Int!   
-
-  " Transfers that occured within the transaction "
-  transfers: [transfer!]! 
-
-  " Sale events that occured within the transaction "
-  sales: [sale!] @derivedFrom(field: "transaction")
-
-  " Gas Spent "
-  gasPrice: BigInt
 
 }
 

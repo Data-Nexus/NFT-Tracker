@@ -25,7 +25,6 @@ export function handleEvProfit(event: EvProfit): void {
   //&& event.transaction.value != constants.BIGINT_ZERO && event.params.buyHash != ) {
   if (tx){
     
-    let i32variable: i32 = parseInt('777')
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
