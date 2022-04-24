@@ -2,6 +2,7 @@ import {
 	account,
 	transfer,
 	transaction,
+	accountCollection,
 } from '../../generated/schema'
 
 import {
@@ -36,8 +37,46 @@ export function handleTransfer(event: TransferEvent): void {
 		if (!receiverAddress) {
 			receiverAddress = new account(event.params.to.toHexString())
 		}		
+		
+		let senderAccountCollection = accountCollection.load(senderAddress.id + '-' + collection.id)
+		if (senderAccountCollection) {
+
+			senderAccountCollection.tokenCount 	 = senderAccountCollection.tokenCount - 1
+			
+			let senderTransactionArray = senderAccountCollection.transactions 
+			senderTransactionArray.push(event.transaction.hash.toHexString())
+				
+		}
+
+		let receiverAccountCollection = accountCollection.load(senderAddress.id + '-' + collection.id)
+		if (!receiverAccountCollection) {
+			
+			
+			receiverAccountCollection 			 = new accountCollection(senderAddress.id + '-' + collection.id)
+			receiverAccountCollection.account 	 = senderAddress.id 
+			receiverAccountCollection.collection = collection.id
+			receiverAccountCollection.tokenCount = 1 
+						
+			let receiverTransactionArray = receiverAccountCollection.transactions
+			receiverTransactionArray.push(event.transaction.hash.toHexString())
+
+			receiverAccountCollection.transactions = receiverTransactionArray
+
+		} 
+		// if Receiver already has AccountCollection record, push new transaction Id to array and increment by 1
+		else {
+			let receiverTransactionArray = receiverAccountCollection.transactions
+			receiverTransactionArray.push(event.transaction.hash.toHexString())
+
+			receiverAccountCollection.transactions = receiverTransactionArray
+			receiverAccountCollection.tokenCount = receiverAccountCollection.tokenCount + 1  
+			
+		}
+
 
 		token.owner = receiverAddress.id
+
+
 
 		collection.save()
 		token.save()
@@ -69,6 +108,7 @@ export function handleTransfer(event: TransferEvent): void {
 			tx.save()
 			
 		}
+
 	}
 
 }

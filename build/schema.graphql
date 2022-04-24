@@ -81,6 +81,24 @@ type token @entity {
 	transfers: [transfer!]! @derivedFrom(field: "token")
 }
 
+type accountCollection @entity {
+    " Account Id - Collection Id "
+    id: ID!
+
+    " Address of the account "
+    account: account 
+
+    " Address of the NFT Collection "
+    collection: collection 
+
+    " Count of NFT's owned in a collection by the Address"
+    tokenCount: Int!
+
+    " transfers from an address with a collection "
+    transactions: [transaction!]! 
+
+}
+
 type transfer @entity {
 
     " Block Number and Event Id in which the transfers event occured"
@@ -139,6 +157,9 @@ type transaction @entity {
   
   " Block Number "
   blockNumber:	BigInt!
+
+  " Address who initiated the transaction "
+  transactionFrom: Bytes! 
   
   " Count of how many transfers were not matched to a sale "
   unmatchedTransferCount: Int!   
@@ -148,6 +169,9 @@ type transaction @entity {
 
   " Sale events that occured within the transaction "
   sales: [sale!] @derivedFrom(field: "transaction")
+
+  " Gas Spent "
+  gasPrice: BigInt
 
 }
 

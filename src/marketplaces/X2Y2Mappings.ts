@@ -24,7 +24,8 @@ export function handleEvProfit(event: EvProfit): void {
   //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
   //&& event.transaction.value != constants.BIGINT_ZERO && event.params.buyHash != ) {
   if (tx){
-
+    
+    let i32variable: i32 = parseInt('777')
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
@@ -33,7 +34,7 @@ export function handleEvProfit(event: EvProfit): void {
       let currency =  'ERC20'
       if (currencyAddress = '0x0000000000000000000000000000000000000000') {currency = 'ETH'}
       if (currencyAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {currency = 'WETH'}
-
+      
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id

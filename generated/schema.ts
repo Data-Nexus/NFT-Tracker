@@ -377,6 +377,95 @@ export class token extends Entity {
   }
 }
 
+export class accountCollection extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("tokenCount", Value.fromI32(0));
+    this.set("transactions", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save accountCollection entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type accountCollection must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("accountCollection", id.toString(), this);
+    }
+  }
+
+  static load(id: string): accountCollection | null {
+    return changetype<accountCollection | null>(
+      store.get("accountCollection", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get account(): string | null {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string | null) {
+    if (!value) {
+      this.unset("account");
+    } else {
+      this.set("account", Value.fromString(<string>value));
+    }
+  }
+
+  get collection(): string | null {
+    let value = this.get("collection");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set collection(value: string | null) {
+    if (!value) {
+      this.unset("collection");
+    } else {
+      this.set("collection", Value.fromString(<string>value));
+    }
+  }
+
+  get tokenCount(): i32 {
+    let value = this.get("tokenCount");
+    return value!.toI32();
+  }
+
+  set tokenCount(value: i32) {
+    this.set("tokenCount", Value.fromI32(value));
+  }
+
+  get transactions(): Array<string> {
+    let value = this.get("transactions");
+    return value!.toStringArray();
+  }
+
+  set transactions(value: Array<string>) {
+    this.set("transactions", Value.fromStringArray(value));
+  }
+}
+
 export class transfer extends Entity {
   constructor(id: string) {
     super();
@@ -605,6 +694,7 @@ export class transaction extends Entity {
 
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
+    this.set("transactionFrom", Value.fromBytes(Bytes.empty()));
     this.set("unmatchedTransferCount", Value.fromI32(0));
     this.set("transfers", Value.fromStringArray(new Array(0)));
   }
@@ -652,6 +742,15 @@ export class transaction extends Entity {
     this.set("blockNumber", Value.fromBigInt(value));
   }
 
+  get transactionFrom(): Bytes {
+    let value = this.get("transactionFrom");
+    return value!.toBytes();
+  }
+
+  set transactionFrom(value: Bytes) {
+    this.set("transactionFrom", Value.fromBytes(value));
+  }
+
   get unmatchedTransferCount(): i32 {
     let value = this.get("unmatchedTransferCount");
     return value!.toI32();
@@ -684,6 +783,23 @@ export class transaction extends Entity {
       this.unset("sales");
     } else {
       this.set("sales", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get gasPrice(): BigInt | null {
+    let value = this.get("gasPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set gasPrice(value: BigInt | null) {
+    if (!value) {
+      this.unset("gasPrice");
+    } else {
+      this.set("gasPrice", Value.fromBigInt(<BigInt>value));
     }
   }
 }

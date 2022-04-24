@@ -35,6 +35,8 @@ export namespace transactions {
 			tx.timestamp   = event.block.timestamp
 			tx.blockNumber = event.block.number
         	tx.unmatchedTransferCount = 0
+			tx.gasPrice = event.transaction.gasPrice
+			tx.transactionFrom = event.transaction.from
 			tx.transfers = new Array<string>()
 			tx.save()
 			}
