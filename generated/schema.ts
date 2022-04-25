@@ -804,6 +804,68 @@ export class sale extends Entity {
   }
 }
 
+export class currency extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+
+    this.set("name", Value.fromString(""));
+    this.set("symbol", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save currency entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type currency must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("currency", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static load(id: Bytes): currency | null {
+    return changetype<currency | null>(store.get("currency", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    return value!.toBytes();
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get decimals(): i32 {
+    let value = this.get("decimals");
+    return value!.toI32();
+  }
+
+  set decimals(value: i32) {
+    this.set("decimals", Value.fromI32(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get symbol(): string {
+    let value = this.get("symbol");
+    return value!.toString();
+  }
+
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
+  }
+}
+
 export class dailyCollectionSnapshot extends Entity {
   constructor(id: string) {
     super();

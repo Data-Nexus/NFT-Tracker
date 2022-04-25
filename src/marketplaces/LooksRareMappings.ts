@@ -13,7 +13,8 @@ import {
 } from '../../generated/LooksRare/LooksRare'
 
 import {
-	constants 
+	constants,
+  ERC20Contracts,
 } from '../../src/graphprotocol-utils'
 
 import { 
@@ -33,6 +34,9 @@ export function handleTakerBid(event: TakerBid): void {
     //3. create new sale entity (id = tx hash - eventId)  
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
+      
+      //test to see if we start logging currencies
+      ERC20Contracts.getERC20(event.params.currency)
       
       let currencyAddress = event.params.currency.toString()
       let currency =  'ERC20'

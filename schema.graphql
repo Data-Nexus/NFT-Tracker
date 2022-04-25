@@ -175,6 +175,18 @@ type sale @entity {
 
 }
 
+type currency @entity {
+  " Currency Address "
+  id: Bytes! 
+
+  decimals: Int 
+
+  name: String!
+
+  symbol: String!
+
+}
+
 type dailyCollectionSnapshot @entity {
 
     " The collection address - The day "

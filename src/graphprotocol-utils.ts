@@ -1,10 +1,14 @@
+import { Bytes } from '@graphprotocol/graph-ts'
 import { 
     BigDecimal, 
     BigInt,
     ethereum,
 } from '@graphprotocol/graph-ts'
 
+import { ERC20 } from '../generated/IERC721/ERC20'
+
 import {
+	currency,
 	transaction,
 } from '../generated/schema'
 
@@ -46,3 +50,22 @@ export namespace transactions {
 	export type Tx = transaction
 }
 
+export namespace ERC20Contracts {
+	export function getERC20 (address: Bytes): currency {
+
+		let currencyEntity = currency.load(address)
+		if (!currencyEntity) {
+
+			let ERC20Var = ERC20.bind(address)
+
+			currencyEntity = new currency(address)
+			currencyEntity.symbol 	= ERC20Var.symbol()
+			currencyEntity.name 	= ERC20Var.name()
+			currencyEntity.decimals = ERC20Var.decimals()
+			currencyEntity.save()
+		}
+
+		return currencyEntity as currency
+	}
+
+}
