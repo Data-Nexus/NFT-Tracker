@@ -1,4 +1,5 @@
 import { Bytes } from '@graphprotocol/graph-ts'
+import { Address } from '@graphprotocol/graph-ts'
 import { 
     BigDecimal, 
     BigInt,
@@ -51,20 +52,25 @@ export namespace transactions {
 }
 
 export namespace ERC20Contracts {
-	export function getERC20 (address: Bytes): currency {
+	export function getERC20 (address: Address): currency {
 
 		let currencyEntity = currency.load(address)
-		if (!currencyEntity) {
 
+		//manually insert eth currency
+		if (!currencyEntity) {
+			
 			let ERC20Var = ERC20.bind(address)
+			let try_name            = ERC20Var.try_name()
+			let try_symbol          = ERC20Var.try_symbol()
+			let try_deicmals        = ERC20Var.try_decimals()
 
 			currencyEntity = new currency(address)
-			currencyEntity.symbol 	= ERC20Var.symbol()
-			currencyEntity.name 	= ERC20Var.name()
-			currencyEntity.decimals = ERC20Var.decimals()
+			currencyEntity.name 	= try_name.reverted		? 'Ether' : try_name.value
+			currencyEntity.symbol 	= try_symbol.reverted	? 'ETH' : try_symbol.value
+			currencyEntity.decimals = try_deicmals.reverted	? 18 : try_deicmals.value
 			currencyEntity.save()
+			
 		}
-
 		return currencyEntity as currency
 	}
 

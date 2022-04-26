@@ -165,13 +165,25 @@ type sale @entity {
   transaction: transaction!
   
   " the currency that the sale occred in "
-  currency: String 
+  currency: currency
 
   " the amount of the sale "
   amount: BigDecimal!
 
   " The marketplace "	
   platform: String		
+
+}
+
+type currency @entity {
+  " Currency Address "
+  id: Bytes! 
+
+  decimals: Int 
+
+  name: String!
+
+  symbol: String!
 
 }
 

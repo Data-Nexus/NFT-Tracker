@@ -29,7 +29,7 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/eip721/index.ts
-  #### OpenSea Contracts ####
+   #### OpenSea Contracts ####
   - kind: ethereum/contract
     name: OpenSeaV1
     network: mainnet
@@ -48,6 +48,8 @@ dataSources:
       abis:
         - name: OpenSeaV1
           file: ./abis/OpenSeaV1.json
+        - name: ERC20
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json           
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
           handler: handleOSv1Sale
@@ -70,10 +72,12 @@ dataSources:
       abis:
         - name: OpenSeaV2
           file: ./abis/OpenSeaV2.json
+        - name: ERC20
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json           
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
           handler: handleOSv1Sale
-      ##event is identical in v2
+       ##event is identical in v2
       file: ./src/marketplaces/OpenSeaV1Mapping.ts 
 
   #### LooksRare Contract ####
@@ -95,6 +99,8 @@ dataSources:
       abis:
         - name: LooksRare
           file: ./abis/LooksRare.json
+        - name: ERC20
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: TakerAsk(bytes32,uint256,indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256)
           handler: handleTakerAsk
@@ -121,6 +127,8 @@ dataSources:
       abis:
         - name: X2Y2
           file: ./abis/X2Y2.json
+        - name: ERC20
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json          
       eventHandlers:
         - event: EvProfit(bytes32,address,address,uint256)
           handler: handleEvProfit

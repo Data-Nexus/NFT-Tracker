@@ -12,11 +12,11 @@ import {
 } from '../../generated/OpenseaV1/OpenSeaV1'
 
 import {
-	constants
+	constants, ERC20Contracts
 } from '../../src/graphprotocol-utils'
 
 import { 
-  BigDecimal
+  BigDecimal,Address
 } from "@graphprotocol/graph-ts"
 
 // TakerAsk Handler starts here
@@ -33,13 +33,12 @@ export function handleOSv1Sale(event: OrdersMatched): void {
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
     
-      let currency = 'ERC20'
-      if (event.transaction.value != constants.BIGINT_ZERO) {currency = 'ETH'}
+      let currency = ERC20Contracts.getERC20(Address.fromString(constants.ADDRESS_ZERO))
 
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
-      saleEntity.currency      = currency
+      saleEntity.currency      = currency.id
       saleEntity.platform      = 'OpenSea'
       saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
       saleEntity.save()
@@ -62,6 +61,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
             transferAmount,
             tx.id,
             saleEntity.id,
+            currency.symbol,
           )
           
         }

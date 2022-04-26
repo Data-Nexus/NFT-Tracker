@@ -14,6 +14,7 @@ import {
 import { 
   BigDecimal
 } from "@graphprotocol/graph-ts"
+import { ERC20Contracts } from '../graphprotocol-utils'
 
 // TakerBid Handler starts here
 export function handleEvProfit(event: EvProfit): void {
@@ -29,18 +30,18 @@ export function handleEvProfit(event: EvProfit): void {
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
         
-      let currencyAddress = event.params.currency.toString()
-      let currency =  'ERC20'
-      if (currencyAddress = '0x0000000000000000000000000000000000000000') {currency = 'ETH'}
-      if (currencyAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {currency = 'WETH'}
+      let currency = ERC20Contracts.getERC20(event.params.currency)
+      
+      //Gather the decimals used in the currency transacted in
+      let amountDecimals = currency.decimals * 10
       
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
-      saleEntity.currency      = currency
+      saleEntity.currency      = currency.id
       saleEntity.platform      = 'X2Y2'
       //X2Y2 emites the profit amount instead of the total price, added / 0.98 to get the full sale price
-      saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString('1000000000000000000')).div(BigDecimal.fromString('0.98')) 
+      saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString(amountDecimals.toString())) .div(BigDecimal.fromString('0.98')) 
       saleEntity.save()
       
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -61,6 +62,7 @@ export function handleEvProfit(event: EvProfit): void {
             transferAmount,
             tx.id,
             saleEntity.id,
+            currency.symbol,
           )
 
         }

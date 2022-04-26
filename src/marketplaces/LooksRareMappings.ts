@@ -35,20 +35,17 @@ export function handleTakerBid(event: TakerBid): void {
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
       
-      //test to see if we start logging currencies
-      ERC20Contracts.getERC20(event.params.currency)
+      let currency = ERC20Contracts.getERC20(event.params.currency)
       
-      let currencyAddress = event.params.currency.toString()
-      let currency =  'ERC20'
-      if (currencyAddress = '0x0000000000000000000000000000000000000000') {currency = 'ETH'}
-      if (currencyAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {currency = 'WETH'}
+      //Gather the decimals used in the currency transacted in
+      let amountDecimals = currency.decimals * 10
 
       //4. Assign currency address, amount, txId and platform to sale entity
-      let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
+      let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
-      saleEntity.currency      = currency
+      saleEntity.currency      = currency.id
       saleEntity.platform      = 'LooksRare'
-      saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+      saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString(amountDecimals.toString())) 
       saleEntity.save()
       
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -69,6 +66,7 @@ export function handleTakerBid(event: TakerBid): void {
             transferAmount,
             tx.id,
             saleEntity.id,
+            currency.symbol,            
           )
 
         }
@@ -87,20 +85,22 @@ export function handleTakerAsk(event: TakerAsk): void {
     //2. nullcheck transaction entity (one should already exist for the transfer earlier in that) if it doesn't exist should we error or skip?  
     //&& event.transaction.value != constants.BIGINT_ZERO && event.params.buyHash != ) {
     if (tx){
-  
+      
       //3. create new sale entity (id = tx hash - eventId)  
       let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
       if (!saleEntity && tx.unmatchedTransferCount > 0) {
       
-        let currency = 'WETH'
-        if (event.transaction.value != constants.BIGINT_ZERO) {currency = 'ETH'}
-  
+        let currency = ERC20Contracts.getERC20(event.params.currency)
+
+        //Gather the decimals used in the currency transacted in
+        let amountDecimals = currency.decimals * 10
+        
         //4. Assign currency address, amount, txId and platform to sale entity
-        let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
+        let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
         saleEntity.transaction   = tx.id
-        saleEntity.currency      = currency
+        saleEntity.currency      = currency.id
         saleEntity.platform      = 'LooksRare'
-        saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+        saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString(amountDecimals.toString())) 
         saleEntity.save()
         
         //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -121,6 +121,7 @@ export function handleTakerAsk(event: TakerAsk): void {
               transferAmount,
               tx.id,
               saleEntity.id,
+              currency.symbol,              
             )
   
           }

@@ -46,6 +46,8 @@ dataSources:
       abis:
         - name: OpenSeaV1
           file: OpenSeaV1\abis\OpenSeaV1.json
+        - name: ERC20
+          file: OpenSeaV1\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed
             bytes32)
@@ -69,6 +71,8 @@ dataSources:
       abis:
         - name: OpenSeaV2
           file: OpenSeaV2\abis\OpenSeaV2.json
+        - name: ERC20
+          file: OpenSeaV2\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed
             bytes32)
@@ -92,6 +96,8 @@ dataSources:
       abis:
         - name: LooksRare
           file: LooksRare\abis\LooksRare.json
+        - name: ERC20
+          file: LooksRare\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
       eventHandlers:
         - event: TakerAsk(bytes32,uint256,indexed address,indexed address,indexed
             address,address,address,uint256,uint256,uint256)
@@ -118,6 +124,8 @@ dataSources:
       abis:
         - name: X2Y2
           file: X2Y2\abis\X2Y2.json
+        - name: ERC20
+          file: X2Y2\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
       eventHandlers:
         - event: EvProfit(bytes32,address,address,uint256)
           handler: handleEvProfit
