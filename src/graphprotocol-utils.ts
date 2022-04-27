@@ -59,7 +59,7 @@ export namespace ERC20Contracts {
 		//manually insert eth currency
 		if (!currencyEntity) {
 			
-			let ERC20Var = ERC20.bind(address)
+			let ERC20Var 			= ERC20.bind(address)
 			let try_name            = ERC20Var.try_name()
 			let try_symbol          = ERC20Var.try_symbol()
 			let try_deicmals        = ERC20Var.try_decimals()
