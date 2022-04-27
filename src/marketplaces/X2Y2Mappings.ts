@@ -33,7 +33,7 @@ export function handleEvProfit(event: EvProfit): void {
       let currency = ERC20Contracts.getERC20(event.params.currency)
       
       //Gather the decimals used in the currency transacted in
-      let amountDecimals = currency.decimals * 10
+      let amountDecimals = 10 ** currency.decimals 
       
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
@@ -41,7 +41,7 @@ export function handleEvProfit(event: EvProfit): void {
       saleEntity.currency      = currency.id
       saleEntity.platform      = 'X2Y2'
       //X2Y2 emites the profit amount instead of the total price, added / 0.98 to get the full sale price
-      saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString(amountDecimals.toString())) .div(BigDecimal.fromString('0.98')) 
+      saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString('1000000000000000000')).div(BigDecimal.fromString('0.98')) 
       saleEntity.save()
       
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 

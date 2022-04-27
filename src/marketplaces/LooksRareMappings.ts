@@ -38,14 +38,14 @@ export function handleTakerBid(event: TakerBid): void {
       let currency = ERC20Contracts.getERC20(event.params.currency)
       
       //Gather the decimals used in the currency transacted in
-      let amountDecimals = currency.decimals * 10
+      let amountDecimals = 10 ** currency.decimals 
 
       //4. Assign currency address, amount, txId and platform to sale entity
       let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
       saleEntity.transaction   = tx.id
       saleEntity.currency      = currency.id
       saleEntity.platform      = 'LooksRare'
-      saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString(amountDecimals.toString())) 
+      saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
       saleEntity.save()
       
       //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -68,7 +68,6 @@ export function handleTakerBid(event: TakerBid): void {
             saleEntity.id,
             currency.symbol,            
           )
-
         }
       }
     }
@@ -93,14 +92,14 @@ export function handleTakerAsk(event: TakerAsk): void {
         let currency = ERC20Contracts.getERC20(event.params.currency)
 
         //Gather the decimals used in the currency transacted in
-        let amountDecimals = currency.decimals * 10
+        let amountDecimals = 10 ** currency.decimals 
         
         //4. Assign currency address, amount, txId and platform to sale entity
         let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
         saleEntity.transaction   = tx.id
         saleEntity.currency      = currency.id
         saleEntity.platform      = 'LooksRare'
-        saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString(amountDecimals.toString())) 
+        saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
         saleEntity.save()
         
         //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
