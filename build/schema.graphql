@@ -177,7 +177,7 @@ type sale @entity {
 
 type currency @entity {
   " Currency Address "
-  id: Bytes! 
+  id: ID! 
 
   decimals: Int 
 

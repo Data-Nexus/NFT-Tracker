@@ -1,6 +1,7 @@
 import {
 	sale,
 	transaction,
+  currency,
 } from '../../generated/schema'
 
 import {
@@ -13,7 +14,6 @@ import {
 } from '../../generated/LooksRare/LooksRare'
 
 import {
-	constants,
   ERC20Contracts,
 } from '../../src/graphprotocol-utils'
 
@@ -35,39 +35,42 @@ export function handleTakerBid(event: TakerBid): void {
     let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
     if (!saleEntity && tx.unmatchedTransferCount > 0) {
       
-      let currency = ERC20Contracts.getERC20(event.params.currency)
-      
-      //Gather the decimals used in the currency transacted in
-      let amountDecimals = 10 ** currency.decimals 
+      ERC20Contracts.getERC20(event.params.currency)
+      let currencyEntity = currency.load(event.params.currency.toHexString())
 
-      //4. Assign currency address, amount, txId and platform to sale entity
-      let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
-      saleEntity.transaction   = tx.id
-      saleEntity.currency      = currency.id
-      saleEntity.platform      = 'LooksRare'
-      saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
-      saleEntity.save()
-      
-      //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
-      // This will derives the amount per transfer (eg each nft's amount in a bundle with 2 NFT's is the total price divided by 2.)
-      let transferAmount      = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
-      
-      //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
-      //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
-      if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
+      if (currencyEntity) {
+        //Gather the decimals used in the currency transacted in
+        let amountDecimals = 10 ** currencyEntity.decimals 
+
+        //4. Assign currency address, amount, txId and platform to sale entity
+        let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
+        saleEntity.transaction   = tx.id
+        saleEntity.currency      = currencyEntity.id
+        saleEntity.platform      = 'LooksRare'
+        saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+        saleEntity.save()
         
-        let array = tx.transfers
-        for (let index = 0; index < array.length; index++) {
+        //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
+        // This will derives the amount per transfer (eg each nft's amount in a bundle with 2 NFT's is the total price divided by 2.)
+        let transferAmount      = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
+        
+        //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
+        //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
+        if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
+          
+          let array = tx.transfers
+          for (let index = 0; index < array.length; index++) {
 
-          let trId = array[index]            
+            let trId = array[index]            
 
-          MatchTransferWithSale(
-            trId, 
-            transferAmount,
-            tx.id,
-            saleEntity.id,
-            currency.symbol,            
-          )
+            MatchTransferWithSale(
+              trId, 
+              transferAmount,
+              tx.id,
+              saleEntity.id,
+              currencyEntity.symbol,            
+            )
+          }
         }
       }
     }
@@ -89,40 +92,42 @@ export function handleTakerAsk(event: TakerAsk): void {
       let saleEntity = sale.load(event.block.number.toString() + '-' + event.logIndex.toString())
       if (!saleEntity && tx.unmatchedTransferCount > 0) {
       
-        let currency = ERC20Contracts.getERC20(event.params.currency)
+        ERC20Contracts.getERC20(event.params.currency)
+        let currencyEntity = currency.load(event.params.currency.toHexString())
 
-        //Gather the decimals used in the currency transacted in
-        let amountDecimals = 10 ** currency.decimals 
-        
-        //4. Assign currency address, amount, txId and platform to sale entity
-        let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
-        saleEntity.transaction   = tx.id
-        saleEntity.currency      = currency.id
-        saleEntity.platform      = 'LooksRare'
-        saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
-        saleEntity.save()
-        
-        //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
-        // This will derives the amount per transfer (eg each nft's amount in a bundle with 2 NFT's is the total price divided by 2.)
-        let transferAmount      = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
-        
-        //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
-        //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
-        if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
-                  
-          let array = tx.transfers
-          for (let index = 0; index < array.length; index++) {
-  
-            let trId = array[index]            
-  
-            MatchTransferWithSale(
-              trId, 
-              transferAmount,
-              tx.id,
-              saleEntity.id,
-              currency.symbol,              
-            )
-  
+        if (currencyEntity) { 
+          //Gather the decimals used in the currency transacted in
+          let amountDecimals = 10 ** currencyEntity.decimals 
+          
+          //4. Assign currency address, amount, txId and platform to sale entity
+          let saleEntity           = new sale(event.block.number.toString() + '-' + event.logIndex.toString())
+          saleEntity.transaction   = tx.id
+          saleEntity.currency      = currencyEntity.id
+          saleEntity.platform      = 'LooksRare'
+          saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+          saleEntity.save()
+          
+          //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
+          // This will derives the amount per transfer (eg each nft's amount in a bundle with 2 NFT's is the total price divided by 2.)
+          let transferAmount      = saleEntity.amount.div(BigDecimal.fromString(tx.unmatchedTransferCount.toString()))  
+          
+          //6. Using unmatchedTransferId loop through the transfer entities and apply the transferAmount and assign saleId , 
+          //reducing the unmatchedTransferCount by 1. save transfer update on each loop.
+          if(tx.transfers && transferAmount && tx.id && saleEntity.id) {
+                    
+            let array = tx.transfers
+            for (let index = 0; index < array.length; index++) {
+    
+              let trId = array[index]            
+    
+              MatchTransferWithSale(
+                trId, 
+                transferAmount,
+                tx.id,
+                saleEntity.id,
+                currencyEntity.symbol,              
+              )
+            }
           }
         }
       }

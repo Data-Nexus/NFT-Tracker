@@ -8,7 +8,9 @@ Key Assumption made in this logic is that every marketplace calls an NFT contrac
 
 # TODO:
 
-Data Validation steps. Then dig into other contracts to listen to.
+Map OpenSea Atomic Match to update currency and metrics as applicable
+
+Inspect Coinbase NFT Marketplace transactions to include into sale entities.
 
 
 # OpenSea

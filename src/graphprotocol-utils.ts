@@ -52,11 +52,11 @@ export namespace transactions {
 }
 
 export namespace ERC20Contracts {
-	export function getERC20 (address: Address): currency {
+	export function getERC20 (address: Address): void {
 
-		let currencyEntity = currency.load(address)
+		let currencyEntity = currency.load(address.toHexString())
 
-		//manually insert eth currency
+		//if currency does not exists attempt to load ERC20 (on failure assume ETH) 
 		if (!currencyEntity) {
 			
 			let ERC20Var 			= ERC20.bind(address)
@@ -64,14 +64,12 @@ export namespace ERC20Contracts {
 			let try_symbol          = ERC20Var.try_symbol()
 			let try_deicmals        = ERC20Var.try_decimals()
 
-			currencyEntity = new currency(address)
+			currencyEntity = new currency(address.toHexString())
 			currencyEntity.name 	= try_name.reverted		? 'Ether' : try_name.value
 			currencyEntity.symbol 	= try_symbol.reverted	? 'ETH' : try_symbol.value
 			currencyEntity.decimals = try_deicmals.reverted	? 18 : try_deicmals.value
 			currencyEntity.save()
 			
 		}
-		return currencyEntity as currency
 	}
-
 }

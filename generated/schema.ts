@@ -760,20 +760,20 @@ export class sale extends Entity {
     this.set("transaction", Value.fromString(value));
   }
 
-  get currency(): Bytes | null {
+  get currency(): string | null {
     let value = this.get("currency");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set currency(value: Bytes | null) {
+  set currency(value: string | null) {
     if (!value) {
       this.unset("currency");
     } else {
-      this.set("currency", Value.fromBytes(<Bytes>value));
+      this.set("currency", Value.fromString(<string>value));
     }
   }
 
@@ -805,9 +805,9 @@ export class sale extends Entity {
 }
 
 export class currency extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
 
     this.set("name", Value.fromString(""));
     this.set("symbol", Value.fromString(""));
@@ -818,24 +818,24 @@ export class currency extends Entity {
     assert(id != null, "Cannot save currency entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type currency must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.STRING,
+        `Entities of type currency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("currency", id.toBytes().toHexString(), this);
+      store.set("currency", id.toString(), this);
     }
   }
 
-  static load(id: Bytes): currency | null {
-    return changetype<currency | null>(store.get("currency", id.toHexString()));
+  static load(id: string): currency | null {
+    return changetype<currency | null>(store.get("currency", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get decimals(): i32 {
