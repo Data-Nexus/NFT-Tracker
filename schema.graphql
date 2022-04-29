@@ -43,6 +43,8 @@ type collection @entity {
     
     " Top Sale ever "
     topSale: BigDecimal!
+
+    " Total Supply of NFTs in the collection"
     
     " Daily info about the collection "
     dailyCollectionSnapshot:   [dailyCollectionSnapshot!]!   @derivedFrom(field: "collection") 

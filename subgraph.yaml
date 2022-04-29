@@ -9,9 +9,8 @@ dataSources:
     name: IERC721
     network: mainnet
     source:
-      address: "0xdb3b2e1f699caf230ee75bfbe7d97d70f81bc945"
       abi: IERC721
-      startBlock: 13669757 #5774644  
+      startBlock: 5774644  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,7 +35,7 @@ dataSources:
     source:
       address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
       abi: OpenSeaV1
-      startBlock: 13669757 #5774644  
+      startBlock: 5774644  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
