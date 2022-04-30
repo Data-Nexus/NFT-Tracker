@@ -591,6 +591,7 @@ export class transfer extends Entity {
     this.set("transaction", Value.fromString(""));
     this.set("collection", Value.fromString(""));
     this.set("token", Value.fromString(""));
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -681,6 +682,15 @@ export class transfer extends Entity {
     }
   }
 
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
   get blockNumber(): BigInt {
     let value = this.get("blockNumber");
     return value!.toBigInt();
@@ -723,6 +733,8 @@ export class sale extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("transaction", Value.fromString(""));
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("blockNumber", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
@@ -775,6 +787,24 @@ export class sale extends Entity {
     } else {
       this.set("currency", Value.fromString(<string>value));
     }
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    return value!.toBigInt();
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
   }
 
   get amount(): BigDecimal {
@@ -863,6 +893,102 @@ export class currency extends Entity {
 
   set symbol(value: string) {
     this.set("symbol", Value.fromString(value));
+  }
+}
+
+export class hourlyCollectionSnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("collection", Value.fromString(""));
+    this.set("hourlyVolume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save hourlyCollectionSnapshot entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type hourlyCollectionSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("hourlyCollectionSnapshot", id.toString(), this);
+    }
+  }
+
+  static load(id: string): hourlyCollectionSnapshot | null {
+    return changetype<hourlyCollectionSnapshot | null>(
+      store.get("hourlyCollectionSnapshot", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
+  }
+
+  get collection(): string {
+    let value = this.get("collection");
+    return value!.toString();
+  }
+
+  set collection(value: string) {
+    this.set("collection", Value.fromString(value));
+  }
+
+  get hourlyVolume(): BigDecimal {
+    let value = this.get("hourlyVolume");
+    return value!.toBigDecimal();
+  }
+
+  set hourlyVolume(value: BigDecimal) {
+    this.set("hourlyVolume", Value.fromBigDecimal(value));
+  }
+
+  get hourlyTransactions(): i32 {
+    let value = this.get("hourlyTransactions");
+    return value!.toI32();
+  }
+
+  set hourlyTransactions(value: i32) {
+    this.set("hourlyTransactions", Value.fromI32(value));
+  }
+
+  get topSale(): BigDecimal {
+    let value = this.get("topSale");
+    return value!.toBigDecimal();
+  }
+
+  set topSale(value: BigDecimal) {
+    this.set("topSale", Value.fromBigDecimal(value));
+  }
+
+  get bottomSale(): BigDecimal {
+    let value = this.get("bottomSale");
+    return value!.toBigDecimal();
+  }
+
+  set bottomSale(value: BigDecimal) {
+    this.set("bottomSale", Value.fromBigDecimal(value));
   }
 }
 

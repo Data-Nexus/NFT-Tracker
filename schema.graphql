@@ -43,8 +43,6 @@ type collection @entity {
     
     " Top Sale ever "
     topSale: BigDecimal!
-
-    " Total Supply of NFTs in the collection"
     
     " Daily info about the collection "
     dailyCollectionSnapshot:   [dailyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
@@ -68,6 +66,7 @@ type token @entity {
     " The id of the NFT"
     identifier: BigInt!
 
+    " Uri attempt on the NFT "
 	uri: String
 
 	" The address the currently owns the token "
@@ -148,6 +147,9 @@ type transfer @entity {
     " The receiver address "
     receiverAddress: account
     
+    " Timestamp for block "
+    timestamp: BigInt!
+
     " Block Number "
     blockNumber: BigInt!
 
@@ -169,6 +171,12 @@ type sale @entity {
   " the currency that the sale occred in "
   currency: currency
 
+  " Timestamp for block "
+  timestamp: BigInt!
+
+  " Block Number "
+  blockNumber: BigInt!
+
   " the amount of the sale "
   amount: BigDecimal!
 
@@ -186,6 +194,31 @@ type currency @entity {
   name: String!
 
   symbol: String!
+
+}
+
+type hourlyCollectionSnapshot @entity {
+
+    " The collection address - The day "
+    id: ID!
+    
+    " The timestamp of the block "
+    timestamp: Int
+    
+    " The collection address " 
+    collection: collection!
+    
+    " The Hourly volume "
+    hourlyVolume: BigDecimal!
+    
+    " Number of Hourly transactions "
+    hourlyTransactions: Int
+    
+    " Hourly top sales "
+    topSale: BigDecimal!
+    
+    " Hourly bottom sales "
+    bottomSale: BigDecimal!
 
 }
 

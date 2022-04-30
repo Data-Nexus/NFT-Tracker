@@ -48,6 +48,8 @@ export function handleTakerBid(event: TakerBid): void {
         saleEntity.currency      = currencyEntity.id
         saleEntity.platform      = 'LooksRare'
         saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+        saleEntity.blockNumber   = event.block.number
+        saleEntity.timestamp     = event.block.timestamp
         saleEntity.save()
         
         //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 
@@ -105,6 +107,8 @@ export function handleTakerAsk(event: TakerAsk): void {
           saleEntity.currency      = currencyEntity.id
           saleEntity.platform      = 'LooksRare'
           saleEntity.amount        = event.params.price.divDecimal(BigDecimal.fromString('1000000000000000000')) 
+          saleEntity.blockNumber   = event.block.number
+          saleEntity.timestamp     = event.block.timestamp
           saleEntity.save()
           
           //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 

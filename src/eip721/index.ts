@@ -95,6 +95,7 @@ export function handleTransfer(event: TransferEvent): void {
 		transferEntity.senderAddress        = senderAddress.id
 		transferEntity.receiverAddress      = receiverAddress.id
 		transferEntity.blockNumber 			= event.block.number
+        transferEntity.timestamp     		= event.block.timestamp
 		transferEntity.amount 				= constants.BIGDECIMAL_ZERO
 		transferEntity.save()
 

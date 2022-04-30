@@ -6,7 +6,7 @@ import {
   transaction, 
   token,
   collection,
-  sale,
+  hourlyCollectionSnapshot,
   dailyCollectionSnapshot, 
   weeklyCollectionSnapshot, 
   monthlyCollectionSnapshot,
@@ -64,7 +64,50 @@ export function MatchTransferWithSale(
 
               collectionEntity.save()
             }
-            
+
+              // hourlyCollectionSnapshot entity starts here
+
+              // The timestamp is in seconds - day = 864000 seconds
+              const hour = transactionEntity.timestamp.toI32() / 3600 
+              
+              // The actual timestamp - bring back in if needed
+              //const date = transactionEntity.timestamp.toI32()
+
+              // Collection Address - Day
+              let hourlyCollectionSnapshotEntityId = transferEntity.collection + '-' + hour.toString()
+              
+              let hourlyCollectionSnapshotEntity = hourlyCollectionSnapshot.load(hourlyCollectionSnapshotEntityId)
+
+              if(!hourlyCollectionSnapshotEntity) {
+                hourlyCollectionSnapshotEntity = new hourlyCollectionSnapshot(hourlyCollectionSnapshotEntityId)
+                hourlyCollectionSnapshotEntity.timestamp          = hour
+                hourlyCollectionSnapshotEntity.collection         = transferEntity.collection
+                hourlyCollectionSnapshotEntity.hourlyVolume        = constants.BIGDECIMAL_ZERO
+                hourlyCollectionSnapshotEntity.hourlyTransactions  = 0
+                hourlyCollectionSnapshotEntity.topSale            = constants.BIGDECIMAL_ZERO
+                hourlyCollectionSnapshotEntity.bottomSale         = constants.BIGDECIMAL_ZERO
+
+                hourlyCollectionSnapshotEntity.save()
+              }
+
+              // Updating daily total volume & top sale
+              hourlyCollectionSnapshotEntity.hourlyVolume = hourlyCollectionSnapshotEntity.hourlyVolume.plus(transferAmount)
+              if (transferAmount > hourlyCollectionSnapshotEntity.topSale) {
+                hourlyCollectionSnapshotEntity.topSale = transferAmount
+              }
+
+              // Updating daily total number of transactions
+              hourlyCollectionSnapshotEntity.hourlyTransactions = hourlyCollectionSnapshotEntity.hourlyTransactions + 1
+
+              // Daily bottom sale
+              if (transferAmount < hourlyCollectionSnapshotEntity.bottomSale 
+                  || (hourlyCollectionSnapshotEntity.bottomSale == constants.BIGDECIMAL_ZERO && transferAmount != constants.BIGDECIMAL_ZERO)
+                  ) {
+                    hourlyCollectionSnapshotEntity.bottomSale = transferAmount
+              }
+
+              // hourlyCollectionSnapshot entity ends here
+
               // dailyCollectionSnapshot entity starts here
 
               // The timestamp is in seconds - day = 864000 seconds
