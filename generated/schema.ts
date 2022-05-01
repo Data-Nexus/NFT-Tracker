@@ -903,6 +903,7 @@ export class hourlyCollectionSnapshot extends Entity {
 
     this.set("collection", Value.fromString(""));
     this.set("hourlyVolume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("hourlyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -973,6 +974,15 @@ export class hourlyCollectionSnapshot extends Entity {
     this.set("hourlyTransactions", Value.fromI32(value));
   }
 
+  get hourlyAvgSale(): BigDecimal {
+    let value = this.get("hourlyAvgSale");
+    return value!.toBigDecimal();
+  }
+
+  set hourlyAvgSale(value: BigDecimal) {
+    this.set("hourlyAvgSale", Value.fromBigDecimal(value));
+  }
+
   get topSale(): BigDecimal {
     let value = this.get("topSale");
     return value!.toBigDecimal();
@@ -999,6 +1009,7 @@ export class dailyCollectionSnapshot extends Entity {
 
     this.set("collection", Value.fromString(""));
     this.set("dailyVolume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("dailyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -1069,6 +1080,15 @@ export class dailyCollectionSnapshot extends Entity {
     this.set("dailyTransactions", Value.fromI32(value));
   }
 
+  get dailyAvgSale(): BigDecimal {
+    let value = this.get("dailyAvgSale");
+    return value!.toBigDecimal();
+  }
+
+  set dailyAvgSale(value: BigDecimal) {
+    this.set("dailyAvgSale", Value.fromBigDecimal(value));
+  }
+
   get topSale(): BigDecimal {
     let value = this.get("topSale");
     return value!.toBigDecimal();
@@ -1096,6 +1116,7 @@ export class weeklyCollectionSnapshot extends Entity {
     this.set("timestamp", Value.fromI32(0));
     this.set("collection", Value.fromString(""));
     this.set("weeklyVolume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("weeklyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -1166,6 +1187,15 @@ export class weeklyCollectionSnapshot extends Entity {
     this.set("weeklyTransactions", Value.fromI32(value));
   }
 
+  get weeklyAvgSale(): BigDecimal {
+    let value = this.get("weeklyAvgSale");
+    return value!.toBigDecimal();
+  }
+
+  set weeklyAvgSale(value: BigDecimal) {
+    this.set("weeklyAvgSale", Value.fromBigDecimal(value));
+  }
+
   get topSale(): BigDecimal {
     let value = this.get("topSale");
     return value!.toBigDecimal();
@@ -1193,6 +1223,7 @@ export class monthlyCollectionSnapshot extends Entity {
     this.set("timestamp", Value.fromI32(0));
     this.set("collection", Value.fromString(""));
     this.set("monthlyVolume", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("monthlyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
   }
@@ -1261,6 +1292,15 @@ export class monthlyCollectionSnapshot extends Entity {
 
   set monthlyTransactions(value: i32) {
     this.set("monthlyTransactions", Value.fromI32(value));
+  }
+
+  get monthlyAvgSale(): BigDecimal {
+    let value = this.get("monthlyAvgSale");
+    return value!.toBigDecimal();
+  }
+
+  set monthlyAvgSale(value: BigDecimal) {
+    this.set("monthlyAvgSale", Value.fromBigDecimal(value));
   }
 
   get topSale(): BigDecimal {

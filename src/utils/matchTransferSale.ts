@@ -106,6 +106,9 @@ export function MatchTransferWithSale(
                     hourlyCollectionSnapshotEntity.bottomSale = transferAmount
               }
 
+              hourlyCollectionSnapshotEntity.hourlyAvgSale = hourlyCollectionSnapshotEntity.hourlyVolume.div(
+                BigDecimal.fromString(hourlyCollectionSnapshotEntity.hourlyTransactions.toString())) 
+
               // hourlyCollectionSnapshot entity ends here
 
               // dailyCollectionSnapshot entity starts here
@@ -148,6 +151,9 @@ export function MatchTransferWithSale(
                   ) {
                 dailyCollectionSnapshotEntity.bottomSale = transferAmount
               }
+              
+              dailyCollectionSnapshotEntity.dailyAvgSale = dailyCollectionSnapshotEntity.dailyVolume.div(
+                BigDecimal.fromString(dailyCollectionSnapshotEntity.dailyTransactions.toString())) 
 
               // dailyCollectionSnapshot entity ends here
 
@@ -189,6 +195,10 @@ export function MatchTransferWithSale(
                 weeklyCollectionSnapshotEntity.bottomSale = transferAmount
                 }
               
+              weeklyCollectionSnapshotEntity.weeklyAvgSale = weeklyCollectionSnapshotEntity.weeklyVolume.div(
+                  BigDecimal.fromString(weeklyCollectionSnapshotEntity.weeklyTransactions.toString())) 
+  
+
               // weeklyCollectionSnapshot entity ends here
               
               // monthlyCollectionSnapshot entity starts here
@@ -227,6 +237,9 @@ export function MatchTransferWithSale(
                   ) {
                 monthlyCollectionSnapshotEntity.bottomSale = transferAmount
                 }
+
+              monthlyCollectionSnapshotEntity.monthlyAvgSale = monthlyCollectionSnapshotEntity.monthlyVolume.div(
+                BigDecimal.fromString(monthlyCollectionSnapshotEntity.monthlyTransactions.toString())) 
 
               // Save metric entities
               dailyCollectionSnapshotEntity.save()

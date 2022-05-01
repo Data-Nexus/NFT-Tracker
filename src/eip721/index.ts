@@ -87,7 +87,6 @@ export function handleTransfer(event: TransferEvent): void {
 		senderAddress.save()
 		receiverAddress.save()
 	
-
 		let transferEntity = new transfer(events.id(event))
 		transferEntity.transaction 			= transactions.log(event).id
 		transferEntity.token       			= token.id

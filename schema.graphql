@@ -213,6 +213,9 @@ type hourlyCollectionSnapshot @entity {
     
     " Number of Hourly transactions "
     hourlyTransactions: Int
+
+    " Average sale amount for the hour "
+    hourlyAvgSale: BigDecimal!
     
     " Hourly top sales "
     topSale: BigDecimal!
@@ -238,6 +241,9 @@ type dailyCollectionSnapshot @entity {
     
     " Number of daily transactions "
     dailyTransactions: Int
+
+    " Average sale amount for the day "
+    dailyAvgSale: BigDecimal!
     
     " Daily top sales "
     topSale: BigDecimal!
@@ -264,6 +270,9 @@ type weeklyCollectionSnapshot @entity {
     
     " Number of weekly transactions "
     weeklyTransactions: Int
+
+    " Average sale amount for the week "
+    weeklyAvgSale: BigDecimal!
     
     " weekly top sales "
     topSale: BigDecimal!
@@ -289,6 +298,9 @@ type monthlyCollectionSnapshot @entity {
     
     " Number of monthly transactions "
     monthlyTransactions: Int
+
+    " Average sale amount for the month "
+    monthlyAvgSale: BigDecimal!
     
     " monthly top sales "
     topSale: BigDecimal!
