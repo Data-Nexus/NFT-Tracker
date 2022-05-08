@@ -57,7 +57,7 @@ export function fetchRegistry(address: Address): collection {
 }
 
 export function fetchToken(collection: collection, id: BigInt): token {
-	let tokenid = collection.id.concat('-').concat(id.toString())
+	let tokenid = 'ethereum/'.concat(collection.id.concat('/').concat(id.toString()))
 	let tokenEntity = token.load(tokenid)
 	if (tokenEntity == null) {
 		let account_zero = new account(constants.ADDRESS_ZERO)
@@ -66,14 +66,7 @@ export function fetchToken(collection: collection, id: BigInt): token {
 		tokenEntity            = new token(tokenid)
 		tokenEntity.collection = collection.id
 		tokenEntity.identifier = id
-		tokenEntity.lastPrice  = constants.BIGDECIMAL_ZERO
-		tokenEntity.topSale	   = constants.BIGDECIMAL_ZERO
-
-		if (collection.supportsMetadata) {
-			let erc721       = IERC721Metadata.bind(Address.fromString(collection.id))
-			let try_tokenURI = erc721.try_tokenURI(id)
-			tokenEntity.uri        = try_tokenURI.reverted ? '' : try_tokenURI.value
-		}
+		
 	}
 	return tokenEntity as token
 }

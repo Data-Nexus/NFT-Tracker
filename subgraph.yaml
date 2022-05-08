@@ -9,6 +9,7 @@ dataSources:
     name: IERC721
     network: mainnet
     source:
+      #address: "0xdb3b2e1f699caf230ee75bfbe7d97d70f81bc945"
       abi: IERC721
       startBlock: 5774644  
     mapping:

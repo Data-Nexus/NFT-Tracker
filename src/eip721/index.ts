@@ -20,6 +20,8 @@ import {
 	transactions,
 } from '../../src/graphprotocol-utils'
 
+import { store } from '@graphprotocol/graph-ts'
+
 export function handleTransfer(event: TransferEvent): void {
 	
 	let collection = fetchRegistry(event.address)
@@ -42,25 +44,18 @@ export function handleTransfer(event: TransferEvent): void {
 		if (senderAccountCollection && senderAddress.id != "0x0000000000000000000000000000000000000000") {
 
 			let senderTokenCountNew = senderAccountCollection.tokenCount - 1
-
 			senderAccountCollection.tokenCount 	 = senderTokenCountNew
-			
-			let senderTransactionArray = senderAccountCollection.transactions 
-			senderTransactionArray.push(event.transaction.hash.toHexString())
-			
 			senderAccountCollection.save()
+
+			if(senderAccountCollection.tokenCount == 0) {store.remove("accountCollection",senderAddress.id + '-' + collection.id)}
 		}
 
 		let receiverAccountCollection = accountCollection.load(receiverAddress.id + '-' + collection.id)
 		if (receiverAccountCollection && receiverAddress.id != "0x0000000000000000000000000000000000000000") {
-			let receiverTransactionArray = receiverAccountCollection.transactions
-			receiverTransactionArray.push(event.transaction.hash.toHexString())
 
 			let receiverTokenCountNew = receiverAccountCollection.tokenCount + 1
 
-			receiverAccountCollection.transactions = receiverTransactionArray
 			receiverAccountCollection.tokenCount = receiverTokenCountNew
-
 			receiverAccountCollection.save()	
 			
 		}
@@ -70,15 +65,9 @@ export function handleTransfer(event: TransferEvent): void {
 			receiverAccountCollection.account 	 = receiverAddress.id 
 			receiverAccountCollection.collection = collection.id
 			receiverAccountCollection.tokenCount = 1 
-						
-			let receiverTransactionArray = receiverAccountCollection.transactions
-			receiverTransactionArray.push(event.transaction.hash.toHexString())
-
-			receiverAccountCollection.transactions = receiverTransactionArray
 
 			receiverAccountCollection.save()	
 		} 
-
 
 		token.owner = receiverAddress.id
 
@@ -93,8 +82,8 @@ export function handleTransfer(event: TransferEvent): void {
 		transferEntity.collection			= collection.id
 		transferEntity.senderAddress        = senderAddress.id
 		transferEntity.receiverAddress      = receiverAddress.id
-		transferEntity.blockNumber 			= event.block.number
-        transferEntity.timestamp     		= event.block.timestamp
+		transferEntity.blockNumber 			= event.block.number.toI32()
+        transferEntity.timestamp     		= event.block.timestamp.toI32()
 		transferEntity.amount 				= constants.BIGDECIMAL_ZERO
 		transferEntity.save()
 

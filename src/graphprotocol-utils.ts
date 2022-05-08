@@ -37,8 +37,8 @@ export namespace transactions {
 		if (!tx) {
 			
 			tx = new transaction(event.transaction.hash.toHexString())
-			tx.timestamp   = event.block.timestamp
-			tx.blockNumber = event.block.number
+			tx.timestamp   = event.block.timestamp.toI32()
+			tx.blockNumber = event.block.number.toI32()
         	tx.unmatchedTransferCount = 0
 			tx.gasPrice = event.transaction.gasPrice
 			tx.transactionFrom = event.transaction.from

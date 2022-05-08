@@ -43,21 +43,15 @@ type collection @entity {
     
     " Top Sale ever "
     topSale: BigDecimal!
-    
+
     " Daily info about the collection "
     dailyCollectionSnapshot:   [dailyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
     
-    " Weekly info about the collection "
-    weeklyCollectionSnapshot:  [weeklyCollectionSnapshot!]!  @derivedFrom(field: "collection") 
-    
-    " Monthly info about the collection "
-    monthlyCollectionSnapshot: [monthlyCollectionSnapshot!]! @derivedFrom(field: "collection") 
-
 }
 
 type token @entity {
 
-    " The collection addrress - The token id "
+    " Ethereum / Collection Addrress - Token Id "
     id: ID!  
 
     " The collection address "
@@ -66,17 +60,8 @@ type token @entity {
     " The id of the NFT"
     identifier: BigInt!
 
-    " Uri attempt on the NFT "
-	uri: String
-
 	" The address the currently owns the token "
 	owner: account 
-    
-    " The NFT last price "
-    lastPrice: BigDecimal!
-    
-    " The NFT top sale ever "
-    topSale: BigDecimal!
 
 	" Transfers involving this token "
 	transfers: [transfer!]! @derivedFrom(field: "token")
@@ -95,9 +80,6 @@ type accountCollection @entity {
     " Count of NFT's owned in a collection by the Address"
     tokenCount: Int!
 
-    " transfers from an address with a collection "
-    transactions: [transaction!]! 
-
 }
 
 type transaction @entity {
@@ -105,10 +87,10 @@ type transaction @entity {
   id: ID!
   
   " Timestamp for block "
-  timestamp: BigInt!
+  timestamp: Int!
   
   " Block Number "
-  blockNumber:	BigInt!
+  blockNumber:	Int!
 
   " Address who initiated the transaction "
   transactionFrom: Bytes! 
@@ -148,10 +130,10 @@ type transfer @entity {
     receiverAddress: account
     
     " Timestamp for block "
-    timestamp: BigInt!
+    timestamp: Int!
 
     " Block Number "
-    blockNumber: BigInt!
+    blockNumber: Int!
 
 	" The amount of ETH paid"
     amount: BigDecimal!
@@ -172,10 +154,10 @@ type sale @entity {
   currency: currency
 
   " Timestamp for block "
-  timestamp: BigInt!
+  timestamp: Int!
 
   " Block Number "
-  blockNumber: BigInt!
+  blockNumber: Int!
 
   " the amount of the sale "
   amount: BigDecimal!
@@ -194,34 +176,6 @@ type currency @entity {
   name: String!
 
   symbol: String!
-
-}
-
-type hourlyCollectionSnapshot @entity {
-
-    " The collection address - The day "
-    id: ID!
-    
-    " The timestamp of the block "
-    timestamp: Int
-    
-    " The collection address " 
-    collection: collection!
-    
-    " The Hourly volume "
-    hourlyVolume: BigDecimal!
-    
-    " Number of Hourly transactions "
-    hourlyTransactions: Int
-
-    " Average sale amount for the hour "
-    hourlyAvgSale: BigDecimal!
-    
-    " Hourly top sales "
-    topSale: BigDecimal!
-    
-    " Hourly bottom sales "
-    bottomSale: BigDecimal!
 
 }
 
@@ -249,63 +203,6 @@ type dailyCollectionSnapshot @entity {
     topSale: BigDecimal!
     
     " Daily bottom sales "
-    bottomSale: BigDecimal!
-
-}
-
-
-type weeklyCollectionSnapshot @entity {
-
-    " The collection address - The week "
-    id: ID!
-    
-    " The timestamp of the block "
-    timestamp: Int!
-    
-    " The collection address "
-    collection: collection!
-    
-    " The weekly volume "
-    weeklyVolume: BigDecimal!
-    
-    " Number of weekly transactions "
-    weeklyTransactions: Int
-
-    " Average sale amount for the week "
-    weeklyAvgSale: BigDecimal!
-    
-    " weekly top sales "
-    topSale: BigDecimal!
-    
-    " weekly bottom sales "
-    bottomSale: BigDecimal!
-
-}
-
-type monthlyCollectionSnapshot @entity { 
-
-    " The collection address - The month "
-    id: ID!
-    
-    " The timestamp of the block "
-    timestamp: Int!
-    
-    " The collection address "
-    collection: collection!
-    
-    " The monthly volume "
-    monthlyVolume: BigDecimal!  
-    
-    " Number of monthly transactions "
-    monthlyTransactions: Int
-
-    " Average sale amount for the month "
-    monthlyAvgSale: BigDecimal!
-    
-    " monthly top sales "
-    topSale: BigDecimal!
-    
-    " monthly bottom sales "
     bottomSale: BigDecimal!
 
 }

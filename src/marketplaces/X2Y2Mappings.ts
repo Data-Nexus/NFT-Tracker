@@ -45,8 +45,8 @@ export function handleEvProfit(event: EvProfit): void {
         saleEntity.platform      = 'X2Y2'
         //X2Y2 emites the profit amount instead of the total price, added / 0.98 to get the full sale price
         saleEntity.amount        = event.params.amount.divDecimal(BigDecimal.fromString('1000000000000000000')).div(BigDecimal.fromString('0.98')) 
-        saleEntity.blockNumber   = event.block.number
-        saleEntity.timestamp     = event.block.timestamp
+        saleEntity.blockNumber   = event.block.number.toI32()
+        saleEntity.timestamp     = event.block.timestamp.toI32()
         saleEntity.save()
         
         //5. Assign sale.amount / transaction.unmatchedTransferCount to variable transferAmount to pass into transfer entities 

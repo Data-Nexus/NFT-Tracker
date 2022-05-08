@@ -4,12 +4,8 @@ import {constants} from '../../src/graphprotocol-utils'
 import { 
   transfer,
   transaction, 
-  token,
   collection,
-  hourlyCollectionSnapshot,
   dailyCollectionSnapshot, 
-  weeklyCollectionSnapshot, 
-  monthlyCollectionSnapshot,
 } from "../../generated/schema"
 
 
@@ -40,18 +36,7 @@ export function MatchTransferWithSale(
           transactionEntity.save()
 
           if (CurrencySymbol == 'ETH' || CurrencySymbol == 'WETH') {
-            // Update token metrics
-            let tokenEntity = token.load(transferEntity.token)
-            if (tokenEntity) {
-              tokenEntity.lastPrice = transferAmount 
 
-              if (transferAmount > tokenEntity.topSale) {
-                tokenEntity.topSale = transferAmount
-              }
-            
-              tokenEntity.save()
-            }
-            
             // Update collection metrics
             let collectionEntity = collection.load(transferEntity.collection)
             if (collectionEntity) {
@@ -65,56 +50,10 @@ export function MatchTransferWithSale(
               collectionEntity.save()
             }
 
-              // hourlyCollectionSnapshot entity starts here
-
-              // The timestamp is in seconds - day = 864000 seconds
-              const hour = transactionEntity.timestamp.toI32() / 3600 
-              
-              // The actual timestamp - bring back in if needed
-              //const date = transactionEntity.timestamp.toI32()
-
-              // Collection Address - Day
-              let hourlyCollectionSnapshotEntityId = transferEntity.collection + '-' + hour.toString()
-              
-              let hourlyCollectionSnapshotEntity = hourlyCollectionSnapshot.load(hourlyCollectionSnapshotEntityId)
-
-              if(!hourlyCollectionSnapshotEntity) {
-                hourlyCollectionSnapshotEntity = new hourlyCollectionSnapshot(hourlyCollectionSnapshotEntityId)
-                hourlyCollectionSnapshotEntity.timestamp          = hour
-                hourlyCollectionSnapshotEntity.collection         = transferEntity.collection
-                hourlyCollectionSnapshotEntity.hourlyVolume        = constants.BIGDECIMAL_ZERO
-                hourlyCollectionSnapshotEntity.hourlyTransactions  = 0
-                hourlyCollectionSnapshotEntity.topSale            = constants.BIGDECIMAL_ZERO
-                hourlyCollectionSnapshotEntity.bottomSale         = constants.BIGDECIMAL_ZERO
-
-                hourlyCollectionSnapshotEntity.save()
-              }
-
-              // Updating daily total volume & top sale
-              hourlyCollectionSnapshotEntity.hourlyVolume = hourlyCollectionSnapshotEntity.hourlyVolume.plus(transferAmount)
-              if (transferAmount > hourlyCollectionSnapshotEntity.topSale) {
-                hourlyCollectionSnapshotEntity.topSale = transferAmount
-              }
-
-              // Updating daily total number of transactions
-              hourlyCollectionSnapshotEntity.hourlyTransactions = hourlyCollectionSnapshotEntity.hourlyTransactions + 1
-
-              // Daily bottom sale
-              if (transferAmount < hourlyCollectionSnapshotEntity.bottomSale 
-                  || (hourlyCollectionSnapshotEntity.bottomSale == constants.BIGDECIMAL_ZERO && transferAmount != constants.BIGDECIMAL_ZERO)
-                  ) {
-                    hourlyCollectionSnapshotEntity.bottomSale = transferAmount
-              }
-
-              hourlyCollectionSnapshotEntity.hourlyAvgSale = hourlyCollectionSnapshotEntity.hourlyVolume.div(
-                BigDecimal.fromString(hourlyCollectionSnapshotEntity.hourlyTransactions.toString())) 
-
-              // hourlyCollectionSnapshot entity ends here
-
               // dailyCollectionSnapshot entity starts here
 
               // The timestamp is in seconds - day = 864000 seconds
-              const day = transactionEntity.timestamp.toI32() / 86400 
+              const day = transactionEntity.timestamp / 86400 
               
               // The actual timestamp - bring back in if needed
               //const date = transactionEntity.timestamp.toI32()
@@ -133,7 +72,6 @@ export function MatchTransferWithSale(
                 dailyCollectionSnapshotEntity.topSale            = constants.BIGDECIMAL_ZERO
                 dailyCollectionSnapshotEntity.bottomSale         = constants.BIGDECIMAL_ZERO
 
-                dailyCollectionSnapshotEntity.save()
               }
 
               // Updating daily total volume & top sale
@@ -157,94 +95,8 @@ export function MatchTransferWithSale(
 
               // dailyCollectionSnapshot entity ends here
 
-              // weeklyCollectionSnapshot entity starts here
-
-              // The timestamp is in seconds - week = 604800 seconds
-              const week = transactionEntity.timestamp.toI32() / 604800
-
-              // Collection Address - Week
-              let weeklyCollectionSnapshotEntityId = transferEntity.collection + '-' + week.toString()
-                
-              let weeklyCollectionSnapshotEntity = weeklyCollectionSnapshot.load(weeklyCollectionSnapshotEntityId)
-
-              if(!weeklyCollectionSnapshotEntity) {
-                  weeklyCollectionSnapshotEntity = new weeklyCollectionSnapshot(weeklyCollectionSnapshotEntityId)
-                  weeklyCollectionSnapshotEntity.timestamp           = week
-                  weeklyCollectionSnapshotEntity.collection          = transferEntity.collection
-                  weeklyCollectionSnapshotEntity.weeklyVolume        = constants.BIGDECIMAL_ZERO
-                  weeklyCollectionSnapshotEntity.weeklyTransactions  = 0
-                  weeklyCollectionSnapshotEntity.topSale             = constants.BIGDECIMAL_ZERO
-                  weeklyCollectionSnapshotEntity.bottomSale          = constants.BIGDECIMAL_ZERO
-
-                  weeklyCollectionSnapshotEntity.save()
-                }
-
-              // Updating weekly volume & top sale
-              weeklyCollectionSnapshotEntity.weeklyVolume = weeklyCollectionSnapshotEntity.weeklyVolume.plus(transferAmount)
-              if (transferAmount > weeklyCollectionSnapshotEntity.topSale) {
-                weeklyCollectionSnapshotEntity.topSale = transferAmount
-                }
-
-              // Updating weekly total number of transactions
-              weeklyCollectionSnapshotEntity.weeklyTransactions = weeklyCollectionSnapshotEntity.weeklyTransactions + 1
-
-              // Weekly bottom sale
-              if (transferAmount < weeklyCollectionSnapshotEntity.bottomSale
-                || (weeklyCollectionSnapshotEntity.bottomSale == constants.BIGDECIMAL_ZERO && transferAmount != constants.BIGDECIMAL_ZERO)
-                  ) {
-                weeklyCollectionSnapshotEntity.bottomSale = transferAmount
-                }
-              
-              weeklyCollectionSnapshotEntity.weeklyAvgSale = weeklyCollectionSnapshotEntity.weeklyVolume.div(
-                  BigDecimal.fromString(weeklyCollectionSnapshotEntity.weeklyTransactions.toString())) 
-  
-
-              // weeklyCollectionSnapshot entity ends here
-              
-              // monthlyCollectionSnapshot entity starts here
-
-              // The timestamp is in seconds - month = 2628288 seconds
-              const month = transactionEntity.timestamp.toI32() / 2628288
-
-              // Collection Address - Month
-              let monthlyCollectionSnapshotEntityId = transferEntity.collection + '-' + month.toString()
-                  
-              let monthlyCollectionSnapshotEntity = monthlyCollectionSnapshot.load(monthlyCollectionSnapshotEntityId)
-              
-              if(!monthlyCollectionSnapshotEntity) {
-                  monthlyCollectionSnapshotEntity = new monthlyCollectionSnapshot(monthlyCollectionSnapshotEntityId)
-                  monthlyCollectionSnapshotEntity.timestamp            = month
-                  monthlyCollectionSnapshotEntity.collection           = transferEntity.collection
-                  monthlyCollectionSnapshotEntity.monthlyVolume        = constants.BIGDECIMAL_ZERO
-                  monthlyCollectionSnapshotEntity.monthlyTransactions  = 0
-                  monthlyCollectionSnapshotEntity.topSale              = constants.BIGDECIMAL_ZERO
-                  monthlyCollectionSnapshotEntity.bottomSale           = constants.BIGDECIMAL_ZERO
-              
-                  monthlyCollectionSnapshotEntity.save()
-                }
-              // Updating monthly volume & top sale
-              monthlyCollectionSnapshotEntity.monthlyVolume = monthlyCollectionSnapshotEntity.monthlyVolume.plus(transferAmount)
-              if (transferAmount > monthlyCollectionSnapshotEntity.topSale) {
-                monthlyCollectionSnapshotEntity.topSale = transferAmount
-                }
-
-              // Updating monthly total number of transactions
-              monthlyCollectionSnapshotEntity.monthlyTransactions = monthlyCollectionSnapshotEntity.monthlyTransactions + 1
-              
-              // Monthly bottom sale
-              if (transferAmount < monthlyCollectionSnapshotEntity.bottomSale
-                  || (monthlyCollectionSnapshotEntity.bottomSale == constants.BIGDECIMAL_ZERO && transferAmount != constants.BIGDECIMAL_ZERO)
-                  ) {
-                monthlyCollectionSnapshotEntity.bottomSale = transferAmount
-                }
-
-              monthlyCollectionSnapshotEntity.monthlyAvgSale = monthlyCollectionSnapshotEntity.monthlyVolume.div(
-                BigDecimal.fromString(monthlyCollectionSnapshotEntity.monthlyTransactions.toString())) 
-
-              // Save metric entities
               dailyCollectionSnapshotEntity.save()
-              weeklyCollectionSnapshotEntity.save()
-              monthlyCollectionSnapshotEntity.save()
+
           }
         }
       }
