@@ -179,6 +179,34 @@ type currency @entity {
 
 }
 
+type hourlyCollectionSnapshot @entity {
+
+    " The collection address - The hour "
+    id: ID!
+    
+    " The timestamp of the block "
+    timestamp: Int
+    
+    " The collection address " 
+    collection: collection!
+    
+    " The hourly volume "
+    hourlyVolume: BigDecimal!
+    
+    " Number of hourly transactions "
+    hourlyTransactions: Int
+
+    " Average sale amount for the day "
+    hourlyAvgSale: BigDecimal!
+    
+    " Hourly top sales "
+    topSale: BigDecimal!
+    
+    " Hourly bottom sales "
+    bottomSale: BigDecimal!
+
+}
+
 type dailyCollectionSnapshot @entity {
 
     " The collection address - The day "
@@ -204,5 +232,40 @@ type dailyCollectionSnapshot @entity {
     
     " Daily bottom sales "
     bottomSale: BigDecimal!
+
+}
+
+type weeklyCollectionSnapshot @entity {
+
+    " The collection address - The week "
+    id: ID!
+    
+    " The timestamp of the block "
+    timestamp: Int
+    
+    " The collection address " 
+    collection: collection!
+    
+    " The monthly volume "
+    weeklyVolume: BigDecimal!
+    
+    " Number of monthly transactions "
+    weeklyTransactions: Int
+
+    " Average sale amount for the day "
+    weeklyAvgSale: BigDecimal!
+    
+    " Weekly top sales "
+    topSale: BigDecimal!
+    
+    " Weekly bottom sales "
+    bottomSale: BigDecimal!
+
+}
+
+type wethTransaction @entity {
+
+    " Hash for weth contained transaction "
+    id: ID!
 
 }

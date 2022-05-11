@@ -11,7 +11,7 @@ dataSources:
     source:
       #address: "0xdb3b2e1f699caf230ee75bfbe7d97d70f81bc945"
       abi: IERC721
-      startBlock: 5774644  
+      startBlock: 5774644 #5774644  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -29,6 +29,28 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/eip721/index.ts
+   
+   #### WETH Contact ####
+  - kind: ethereum/contract
+    name: WETH
+    network: mainnet
+    source:
+      address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+      abi: ERC20Abi
+      startBlock: 5774644 #5774644  
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - wethTransaction
+      abis:
+        - name: ERC20Abi
+          file: ./abis/ERC20ABI.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/utils/wethUtil.ts
    #### OpenSea Contracts ####
   - kind: ethereum/contract
     name: OpenSeaV1
@@ -36,7 +58,7 @@ dataSources:
     source:
       address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
       abi: OpenSeaV1
-      startBlock: 5774644  
+      startBlock: 5774644 #5774644  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -49,7 +71,7 @@ dataSources:
         - name: OpenSeaV1
           file: ./abis/OpenSeaV1.json
         - name: ERC20
-          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json           
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json             
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
           handler: handleOSv1Sale
@@ -60,7 +82,7 @@ dataSources:
     source:
       address: "0x7f268357A8c2552623316e2562D90e642bB538E5"
       abi: OpenSeaV2
-      startBlock: 14120913
+      startBlock: 14591056
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,9 +93,9 @@ dataSources:
         - sale
       abis:
         - name: OpenSeaV2
-          file: ./abis/OpenSeaV2.json
+          file: ./abis/OpenSeaV2.json   
         - name: ERC20
-          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json           
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json             
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
           handler: handleOSv1Sale
@@ -87,7 +109,7 @@ dataSources:
     source:
       address: "0x59728544B08AB483533076417FbBB2fD0B17CE3a"
       abi: LooksRare
-      startBlock: 13885625
+      startBlock: 14591056
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -115,7 +137,7 @@ dataSources:
     source:
       address: "0x74312363e45dcaba76c59ec49a7aa8a65a67eed3"
       abi: X2Y2
-      startBlock: 14139150
+      startBlock: 14591056
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

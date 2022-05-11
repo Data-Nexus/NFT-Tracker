@@ -65,8 +65,8 @@ export namespace ERC20Contracts {
 			let try_deicmals        = ERC20Var.try_decimals()
 
 			currencyEntity = new currency(address.toHexString())
-			currencyEntity.name 	= try_name.reverted		? 'Ether' : try_name.value
-			currencyEntity.symbol 	= try_symbol.reverted	? 'ETH' : try_symbol.value
+			currencyEntity.name 	= try_name.reverted		? 'ERC20' : try_name.value
+			currencyEntity.symbol 	= try_symbol.reverted	? 'ERC20' : try_symbol.value
 			currencyEntity.decimals = try_deicmals.reverted	? 18 : try_deicmals.value
 			currencyEntity.save()
 			
