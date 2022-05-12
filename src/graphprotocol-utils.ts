@@ -57,7 +57,22 @@ export namespace ERC20Contracts {
 		let currencyEntity = currency.load(address.toHexString())
 
 		//if currency does not exists attempt to load ERC20 (on failure assume ETH) 
-		if (!currencyEntity) {
+		if (!currencyEntity && address == Address.fromString(constants.ADDRESS_ZERO)) {
+			
+			let ERC20Var 			= ERC20.bind(address)
+			let try_name            = ERC20Var.try_name()
+			let try_symbol          = ERC20Var.try_symbol()
+			let try_deicmals        = ERC20Var.try_decimals()
+
+			currencyEntity = new currency(address.toHexString())
+			currencyEntity.name 	= try_name.reverted		? 'Ether' : try_name.value
+			currencyEntity.symbol 	= try_symbol.reverted	? 'ETH' : try_symbol.value
+			currencyEntity.decimals = try_deicmals.reverted	? 18 : try_deicmals.value
+			currencyEntity.save()
+			
+		}
+
+		if (!currencyEntity && address != Address.fromString(constants.ADDRESS_ZERO)) {
 			
 			let ERC20Var 			= ERC20.bind(address)
 			let try_name            = ERC20Var.try_name()

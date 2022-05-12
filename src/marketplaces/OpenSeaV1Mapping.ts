@@ -45,7 +45,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       if (event.transaction.value != constants.BIGINT_ZERO) {currencyAddress = Address.fromString(constants.ADDRESS_ZERO)}
 
       ERC20Contracts.getERC20(currencyAddress)
-      let currencyEntity = currency.load(constants.ADDRESS_ZERO)
+      let currencyEntity = currency.load(currencyAddress.toString())
         
       if (currencyEntity) {
         //4. Assign currency address, amount, txId and platform to sale entity

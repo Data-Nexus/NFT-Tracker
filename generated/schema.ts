@@ -233,6 +233,15 @@ export class collection extends Entity {
     this.set("topSale", Value.fromBigDecimal(value));
   }
 
+  get hourlyCollectionSnapshot(): Array<string> {
+    let value = this.get("hourlyCollectionSnapshot");
+    return value!.toStringArray();
+  }
+
+  set hourlyCollectionSnapshot(value: Array<string>) {
+    this.set("hourlyCollectionSnapshot", Value.fromStringArray(value));
+  }
+
   get dailyCollectionSnapshot(): Array<string> {
     let value = this.get("dailyCollectionSnapshot");
     return value!.toStringArray();
@@ -240,6 +249,15 @@ export class collection extends Entity {
 
   set dailyCollectionSnapshot(value: Array<string>) {
     this.set("dailyCollectionSnapshot", Value.fromStringArray(value));
+  }
+
+  get weeklyCollectionSnapshot(): Array<string> {
+    let value = this.get("weeklyCollectionSnapshot");
+    return value!.toStringArray();
+  }
+
+  set weeklyCollectionSnapshot(value: Array<string>) {
+    this.set("weeklyCollectionSnapshot", Value.fromStringArray(value));
   }
 }
 

@@ -15,14 +15,13 @@ Inspect Coinbase NFT Marketplace transactions to include into sale entities.
 
 # OpenSea
 
-Add handleOSSale in mapping
-
 Various Transaction Type examples:
 
 [Opensea Transaction](https://etherscan.io/tx/0xd5998f56b9f1d0308d572a4b15e4ef6348ebb26a7f37d88c82c20ada769bda39) 
 
 [Opensea Bundle](https://etherscan.io/tx/0x9b16c3448cf2c7db57169d2bda94add45c2cb12cd9c36d385ee86803d5e42964)
 
+[Opensea APE Purchase](https://etherscan.io/tx/0x672d9d065d9a86e0e083d069a5809b7aacc53a46d0f4e67547495ade6ea0730c)
 
 # LooksRare:
 
