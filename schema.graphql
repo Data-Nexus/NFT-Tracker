@@ -26,14 +26,14 @@ type collection @entity {
     " The name of the collection "
     name: String
 	
-	" The symbol for the collection "
-	symbol: String
+    " The symbol for the collection "
+    symbol: String
 
-	" Tokens for the collection"
-	tokens: [token!]! @derivedFrom(field: "collection")
+    " Tokens for the collection"
+    tokens: [token!]! @derivedFrom(field: "collection")
 
-	" Collection supports metadata "
-	supportsMetadata: Boolean
+    " Collection supports metadata "
+    supportsMetadata: Boolean
 
     " Total sales "
     totalSales: Int!
@@ -46,7 +46,7 @@ type collection @entity {
 
     " Hourly info about the collection "
     hourlyCollectionSnapshot:   [hourlyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
-
+    
     " Daily info about the collection "
     dailyCollectionSnapshot:   [dailyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
 
