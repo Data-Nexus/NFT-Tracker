@@ -190,7 +190,7 @@ type hourlyCollectionSnapshot @entity {
     " The collection address - The hour "
     id: ID!
     
-    " The timestamp of the block "
+    " Unix Hour (Timestamp / 3600 * 3600) "
     timestamp: Int
     
     " The collection address " 
@@ -218,7 +218,7 @@ type dailyCollectionSnapshot @entity {
     " The collection address - The day "
     id: ID!
     
-    " The timestamp of the block "
+    " Unix Day (Timestamp / 86400 * 86400) "
     timestamp: Int
     
     " The collection address " 
@@ -246,7 +246,7 @@ type weeklyCollectionSnapshot @entity {
     " The collection address - The week "
     id: ID!
     
-    " The timestamp of the block "
+    " Unix Week (Timestamp / 604800 * 604800) "
     timestamp: Int
     
     " The collection address " 

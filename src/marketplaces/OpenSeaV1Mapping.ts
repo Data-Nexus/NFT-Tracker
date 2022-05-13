@@ -42,7 +42,7 @@ export function handleOSv1Sale(event: OrdersMatched): void {
       // If there was a transfer of WETH assume the sale occurs in WETH
       if (wethTest) { currencyAddress = Address.fromString('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')}
       //If the transaction value is > 0 then assume the sale occurs in ETH
-      if (event.transaction.value != constants.BIGINT_ZERO) {currencyAddress = Address.fromString(constants.ADDRESS_ZERO)}
+      if (event.transaction.value != constants.BIGINT_ZERO || event.params.price == constants.BIGINT_ONE) {currencyAddress = Address.fromString(constants.ADDRESS_ZERO)}
 
       ERC20Contracts.getERC20(currencyAddress)
       let currencyEntity = currency.load(currencyAddress.toHexString())

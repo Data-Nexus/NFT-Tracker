@@ -64,7 +64,7 @@ export function MatchTransferWithSale(
 
               if(!hourlyCollectionSnapshotEntity) {
                 hourlyCollectionSnapshotEntity = new hourlyCollectionSnapshot(hourlyCollectionSnapshotEntityId)
-                hourlyCollectionSnapshotEntity.timestamp          = hour
+                hourlyCollectionSnapshotEntity.timestamp          = hour * 3600
                 hourlyCollectionSnapshotEntity.collection         = transferEntity.collection
                 hourlyCollectionSnapshotEntity.hourlyVolume        = constants.BIGDECIMAL_ZERO
                 hourlyCollectionSnapshotEntity.hourlyTransactions  = 0
@@ -107,7 +107,7 @@ export function MatchTransferWithSale(
 
               if(!dailyCollectionSnapshotEntity) {
                 dailyCollectionSnapshotEntity = new dailyCollectionSnapshot(dailyCollectionSnapshotEntityId)
-                dailyCollectionSnapshotEntity.timestamp          = day
+                dailyCollectionSnapshotEntity.timestamp          = day * 86400
                 dailyCollectionSnapshotEntity.collection         = transferEntity.collection
                 dailyCollectionSnapshotEntity.dailyVolume        = constants.BIGDECIMAL_ZERO
                 dailyCollectionSnapshotEntity.dailyTransactions  = 0
@@ -150,7 +150,7 @@ export function MatchTransferWithSale(
 
               if(!weeklyCollectionSnapshotEntity) {
                   weeklyCollectionSnapshotEntity = new weeklyCollectionSnapshot(weeklyCollectionSnapshotEntityId)
-                  weeklyCollectionSnapshotEntity.timestamp           = week
+                  weeklyCollectionSnapshotEntity.timestamp           = week * 604800
                   weeklyCollectionSnapshotEntity.collection          = transferEntity.collection
                   weeklyCollectionSnapshotEntity.weeklyVolume        = constants.BIGDECIMAL_ZERO
                   weeklyCollectionSnapshotEntity.weeklyTransactions  = 0
