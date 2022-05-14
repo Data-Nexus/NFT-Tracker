@@ -188,6 +188,40 @@ export class collection extends Entity {
     }
   }
 
+  get totalSupply(): BigInt | null {
+    let value = this.get("totalSupply");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalSupply(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalSupply");
+    } else {
+      this.set("totalSupply", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get mintPrice(): BigDecimal | null {
+    let value = this.get("mintPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set mintPrice(value: BigDecimal | null) {
+    if (!value) {
+      this.unset("mintPrice");
+    } else {
+      this.set("mintPrice", Value.fromBigDecimal(<BigDecimal>value));
+    }
+  }
+
   get tokens(): Array<string> {
     let value = this.get("tokens");
     return value!.toStringArray();

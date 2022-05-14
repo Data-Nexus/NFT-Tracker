@@ -29,6 +29,12 @@ type collection @entity {
     " The symbol for the collection "
     symbol: String
 
+    " Total Supply of Tokens "
+    totalSupply: BigInt
+
+    " Mint Price "
+    mintPrice: BigDecimal
+
     " Tokens for the collection"
     tokens: [token!]! @derivedFrom(field: "collection")
 

@@ -23,6 +23,8 @@ dataSources:
           file: IERC721\node_modules\@openzeppelin\contracts\build\contracts\IERC721.json
         - name: IERC721Metadata
           file: IERC721\node_modules\@openzeppelin\contracts\build\contracts\IERC721Metadata.json
+        - name: Contract721
+          file: IERC721\abis\Contract721.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
