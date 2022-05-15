@@ -16,6 +16,8 @@ Inspect thirdweb NFT Factory contract to dynamically index all sales from market
 
 Update decimal eponentiation in mappings should a sale occur in an ERC20 that is not 18 decimals.
 
+
+
 # OpenSea
 
 Various Transaction Type examples:

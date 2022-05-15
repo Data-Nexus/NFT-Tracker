@@ -117,6 +117,15 @@ export class account extends Entity {
   set transfersTo(value: Array<string>) {
     this.set("transfersTo", Value.fromStringArray(value));
   }
+
+  get accountCollection(): Array<string> {
+    let value = this.get("accountCollection");
+    return value!.toStringArray();
+  }
+
+  set accountCollection(value: Array<string>) {
+    this.set("accountCollection", Value.fromStringArray(value));
+  }
 }
 
 export class collection extends Entity {
@@ -292,6 +301,15 @@ export class collection extends Entity {
 
   set weeklyCollectionSnapshot(value: Array<string>) {
     this.set("weeklyCollectionSnapshot", Value.fromStringArray(value));
+  }
+
+  get accountCollection(): Array<string> {
+    let value = this.get("accountCollection");
+    return value!.toStringArray();
+  }
+
+  set accountCollection(value: Array<string>) {
+    this.set("accountCollection", Value.fromStringArray(value));
   }
 }
 

@@ -15,6 +15,9 @@ type account @entity {
 	
 	" The transfers recevied by this account"
 	transfersTo:   [transfer!]! @derivedFrom(field: "receiverAddress")
+
+    " M:M relationship for Accounts and Collections "
+	accountCollection: [accountCollection!]! @derivedFrom(field: "account")
 }
 
 "replaces TokenRegistry"
@@ -58,6 +61,9 @@ type collection @entity {
 
      " Weekly info about the collection "
     weeklyCollectionSnapshot:   [weeklyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
+
+    " M:M relationship for Accounts and Collections "
+	accountCollection: [accountCollection!]! @derivedFrom(field: "collection")
     
 }
 
