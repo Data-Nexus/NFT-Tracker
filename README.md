@@ -1,17 +1,20 @@
 # NFT Sales
+###### Made by Data Nexus & Ahmad Merdeni under MIT License
+
 Subgraph to index all 721 NFT transfers, then attempt to match NFT Marketplace's sale events to the transfer.
 
-The intent is that we can graft new marketplace contracts to include sale history as their contracts are deployed and mapped.
+The intent is that we can graft new marketplace contracts to include sale events as their contracts are deployed and mapped.
 
 Key Assumption made in this logic is that every marketplace calls an NFT contract's transfer event BEFORE they emit their sale event (OrdersMatched, TakerBid, TakerAsk etc.). Upon the contracts transfer event, we handleTransfer, then upon the marketplace's sale event we handleSale (which updates the transfer entity).
 
 
 # TODO:
 
-Map OpenSea Atomic Match to update currency and metrics as applicable
-
 Inspect Coinbase NFT Marketplace transactions to include into sale entities.
 
+Inspect thirdweb NFT Factory contract to dynamically index all sales from marketplaces deriving from thirdweb - pending meeting with thirdweb team.
+
+Update decimal eponentiation in mappings should a sale occur in an ERC20 that is not 18 decimals.
 
 # OpenSea
 
@@ -35,7 +38,7 @@ Various Transaction Type examples:
 
 # Gem.xyz
 
-Interesting transaction with cross platform sales noting to ensure it indexes as intended.
+Interesting sweep transactions with cross platform sales noting to ensure it indexes as intended.
 
 [multicontract transaction](https://etherscan.io/tx/0x692af20c5e84c896984034d8636da698e40fae72e973fc090fc46ad0dda06f52) 
 
@@ -49,3 +52,5 @@ OpenSea v1 - 0x7be8076f4ea4a4ad08075c2508e481d6c946d12b (start block 5774644)
 Opensea V2 - 0x7f268357a8c2552623316e2562d90e642bb538e5 (start block 14120913)
 
 LooksRare - 0x59728544B08AB483533076417FbBB2fD0B17CE3a (start block 13885625)
+
+X2Y2 - 0x74312363e45dcaba76c59ec49a7aa8a65a67eed3 (start block 14139150)
