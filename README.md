@@ -3,6 +3,8 @@
 
 Subgraph to index all 721 NFT transfers, then attempt to match NFT Marketplace's sale events to the transfer.
 
+[API Documentation](https://docs.datanexus.tech/erc721-marketplace/intro)
+
 The intent is that we can graft new marketplace contracts to include sale events as their contracts are deployed and mapped.
 
 Key Assumption made in this logic is that every marketplace calls an NFT contract's transfer event BEFORE they emit their sale event (OrdersMatched, TakerBid, TakerAsk etc.). Upon the contracts transfer event, we handleTransfer, then upon the marketplace's sale event we handleSale (which updates the transfer entity).
@@ -10,11 +12,15 @@ Key Assumption made in this logic is that every marketplace calls an NFT contrac
 
 # TODO:
 
-Inspect Coinbase NFT Marketplace transactions to include into sale entities.
+Listen to EvInventory anonymous event for X2Y2 pricing
+
+Inspect SeaPort to dynamically index all marketplaces deriving from SeaPort contracts.
 
 Inspect thirdweb NFT Factory contract to dynamically index all sales from marketplaces deriving from thirdweb - pending meeting with thirdweb team.
 
 Update decimal eponentiation in mappings should a sale occur in an ERC20 that is not 18 decimals.
+
+Inspect Coinbase NFT Marketplace transactions to include into sale entities.
 
 
 
