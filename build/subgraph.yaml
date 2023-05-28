@@ -1,4 +1,4 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 description: 721-MarketPlace
 repository: https://github.com/Data-Nexus/nft-sales-v2
 schema:
@@ -20,15 +20,15 @@ dataSources:
         - account
       abis:
         - name: IERC721
-          file: IERC721\node_modules\@openzeppelin\contracts\build\contracts\IERC721.json
+          file: IERC721/node_modules/@openzeppelin/contracts/build/contracts/IERC721.json
         - name: IERC721Metadata
-          file: IERC721\node_modules\@openzeppelin\contracts\build\contracts\IERC721Metadata.json
+          file: IERC721/node_modules/@openzeppelin/contracts/build/contracts/IERC721Metadata.json
         - name: Contract721
-          file: IERC721\abis\Contract721.json
+          file: IERC721/abis/Contract721.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: IERC721\IERC721.wasm
+      file: IERC721/IERC721.wasm
   - kind: ethereum/contract
     name: WETH
     network: mainnet
@@ -44,11 +44,11 @@ dataSources:
         - wethTransaction
       abis:
         - name: ERC20Abi
-          file: WETH\abis\ERC20ABI.json
+          file: WETH/abis/ERC20ABI.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-      file: WETH\WETH.wasm
+      file: WETH/WETH.wasm
   - kind: ethereum/contract
     name: OpenSeaV1
     network: mainnet
@@ -66,14 +66,14 @@ dataSources:
         - sale
       abis:
         - name: OpenSeaV1
-          file: OpenSeaV1\abis\OpenSeaV1.json
+          file: OpenSeaV1/abis/OpenSeaV1.json
         - name: ERC20
-          file: OpenSeaV1\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
+          file: OpenSeaV1/node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed
             bytes32)
           handler: handleOSv1Sale
-      file: OpenSeaV1\OpenSeaV1.wasm
+      file: OpenSeaV1/OpenSeaV1.wasm
   - kind: ethereum/contract
     name: OpenSeaV2
     network: mainnet
@@ -91,14 +91,14 @@ dataSources:
         - sale
       abis:
         - name: OpenSeaV2
-          file: OpenSeaV2\abis\OpenSeaV2.json
+          file: OpenSeaV2/abis/OpenSeaV2.json
         - name: ERC20
-          file: OpenSeaV2\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
+          file: OpenSeaV2/node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed
             bytes32)
           handler: handleOSv1Sale
-      file: OpenSeaV1\OpenSeaV1.wasm
+      file: OpenSeaV1/OpenSeaV1.wasm
   - kind: ethereum
     name: LooksRare
     network: mainnet
@@ -116,9 +116,9 @@ dataSources:
         - sale
       abis:
         - name: LooksRare
-          file: LooksRare\abis\LooksRare.json
+          file: LooksRare/abis/LooksRare.json
         - name: ERC20
-          file: LooksRare\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
+          file: LooksRare/node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: TakerAsk(bytes32,uint256,indexed address,indexed address,indexed
             address,address,address,uint256,uint256,uint256)
@@ -126,7 +126,7 @@ dataSources:
         - event: TakerBid(bytes32,uint256,indexed address,indexed address,indexed
             address,address,address,uint256,uint256,uint256)
           handler: handleTakerBid
-      file: LooksRare\LooksRare.wasm
+      file: LooksRare/LooksRare.wasm
   - kind: ethereum
     name: X2Y2
     network: mainnet
@@ -144,10 +144,10 @@ dataSources:
         - sale
       abis:
         - name: X2Y2
-          file: X2Y2\abis\X2Y2.json
+          file: X2Y2/abis/X2Y2.json
         - name: ERC20
-          file: X2Y2\node_modules\@openzeppelin\contracts\build\contracts\ERC20.json
+          file: X2Y2/node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: EvProfit(bytes32,address,address,uint256)
           handler: handleEvProfit
-      file: X2Y2\X2Y2.wasm
+      file: X2Y2/X2Y2.wasm

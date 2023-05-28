@@ -53,6 +53,12 @@ type collection @entity {
     " Top Sale ever "
     topSale: BigDecimal!
 
+    " Timestamp in UNIX when it was deployed"
+    createdAt: BigInt!
+
+    " Blocknumber when it was deployed"
+    createdAtBlock: BigInt!
+
     " Hourly info about the collection "
     hourlyCollectionSnapshot:   [hourlyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
     
