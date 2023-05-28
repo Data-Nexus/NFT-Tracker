@@ -255,6 +255,22 @@ export class X2Y2__ongoingAuctionsResult {
     map.set("value3", ethereum.Value.fromAddress(this.value3));
     return map;
   }
+
+  getPrice(): BigInt {
+    return this.value0;
+  }
+
+  getNetPrice(): BigInt {
+    return this.value1;
+  }
+
+  getEndAt(): BigInt {
+    return this.value2;
+  }
+
+  getBidder(): Address {
+    return this.value3;
+  }
 }
 
 export class X2Y2__run1InputOrderStruct extends ethereum.Tuple {

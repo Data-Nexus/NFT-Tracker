@@ -24,7 +24,7 @@ import { store } from '@graphprotocol/graph-ts'
 
 export function handleTransfer(event: TransferEvent): void {
 	
-	let collection = fetchRegistry(event.address)
+	let collection = fetchRegistry(event.address, event.block.timestamp, event.block.number)
 	if (collection != null)
 	{
 		let token = fetchToken(collection, event.params.tokenId)

@@ -27,7 +27,7 @@ import {
 	constants,
 } from '../../src/graphprotocol-utils'
 
-export function fetchRegistry(address: Address): collection {
+export function fetchRegistry(address: Address, timestamp: BigInt, blockNumber: BigInt): collection {
 	let erc721   		= IERC721Metadata.bind(address)
 	let Collection 		= Contract721.bind(address)
 	let contractEntity  = contract.load(address.toHexString())
@@ -58,6 +58,8 @@ export function fetchRegistry(address: Address): collection {
 			collectionEntity.name             = try_name.reverted   ? '' : try_name.value
 			collectionEntity.symbol           = try_symbol.reverted ? '' : try_symbol.value
 			collectionEntity.mintPrice 		  = mintPrice
+			collectionEntity.createdAt 		  = timestamp
+			collectionEntity.createdAtBlock   = blockNumber
 			collectionEntity.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
 			collectionEntity.totalSales 	  = 0
 			collectionEntity.totalVolume 	  = constants.BIGDECIMAL_ZERO

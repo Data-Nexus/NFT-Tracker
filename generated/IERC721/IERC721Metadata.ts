@@ -386,7 +386,7 @@ export class SetApprovalForAllCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _approved(): boolean {
+  get approved(): boolean {
     return this._call.inputValues[1].value.toBoolean();
   }
 }
