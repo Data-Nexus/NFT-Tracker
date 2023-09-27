@@ -1,4 +1,4 @@
-specVersion: 0.0.4
+specVersion: 0.0.5
 description: 721-MarketPlace
 repository: https://github.com/Data-Nexus/nft-sales-v2
 schema:
@@ -12,7 +12,7 @@ dataSources:
       startBlock: 5774644
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - transfer
