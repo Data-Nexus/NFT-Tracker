@@ -1,289 +1,99 @@
 type contract @entity {
-	id:                           ID!
-	asERC721:                     collection
+  id: ID!
+  asERC721: collection
 }
 
 type account @entity {
-	" the wallet address "
-	id: ID!
+  " the wallet address "
+  id: ID!
 
-	" The NFTs owned by this account "
-	tokens: [token!]! @derivedFrom(field: "owner")
-	
-	" The transfers originating from this account "
-	transfersFrom: [transfer!]! @derivedFrom(field: "senderAddress")
-	
-	" The transfers recevied by this account"
-	transfersTo:   [transfer!]! @derivedFrom(field: "receiverAddress")
+  " The NFTs owned by this account "
+  tokens: [token!]! @derivedFrom(field: "owner")
 
-    " M:M relationship for Accounts and Collections "
-	accountCollection: [accountCollection!]! @derivedFrom(field: "account")
+  " The transfers originating from this account "
+  transfersFrom: [transfer!]! @derivedFrom(field: "senderAddress")
+
+  " The transfers recevied by this account"
+  transfersTo: [transfer!]! @derivedFrom(field: "receiverAddress")
+
+  " M:M relationship for Accounts and Collections "
+  holdings: [holding!]! @derivedFrom(field: "account")
 }
 
 "replaces TokenRegistry"
 type collection @entity {
+  " The address of the collection "
+  id: ID!
 
-    " The address of the collection "
-    id: ID!
-    
-    " The name of the collection "
-    name: String
-	
-    " The symbol for the collection "
-    symbol: String
+  " The name of the collection "
+  name: String
 
-    " Total Supply of Tokens "
-    totalSupply: BigInt
+  " The symbol for the collection "
+  symbol: String
 
-    " Mint Price "
-    mintPrice: BigDecimal
+  " Total Supply of Tokens "
+  totalSupply: BigInt
 
-    " Tokens for the collection"
-    tokens: [token!]! @derivedFrom(field: "collection")
+  " Tokens for the collection"
+  tokens: [token!]! @derivedFrom(field: "collection")
 
-    " Collection supports metadata "
-    supportsMetadata: Boolean
-
-    " Total sales "
-    totalSales: Int!
-		
-    " Total volume "
-    totalVolume: BigDecimal!
-    
-    " Top Sale ever "
-    topSale: BigDecimal!
-
-    " Hourly info about the collection "
-    hourlyCollectionSnapshot:   [hourlyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
-    
-    " Daily info about the collection "
-    dailyCollectionSnapshot:   [dailyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
-
-     " Weekly info about the collection "
-    weeklyCollectionSnapshot:   [weeklyCollectionSnapshot!]!   @derivedFrom(field: "collection") 
-
-    " M:M relationship for Accounts and Collections "
-	accountCollection: [accountCollection!]! @derivedFrom(field: "collection")
-    
+  " M:M relationship for Accounts and Collections "
+  holdings: [holding!]! @derivedFrom(field: "collection")
 }
 
 type token @entity {
-
-    " Ethereum / Collection Addrress - Token Id "
-    id: ID!  
-
-    " The collection address "
-    collection: collection!
-
-    " The id of the NFT"
-    identifier: BigInt!
-
-	" The address the currently owns the token "
-	owner: account 
-
-	" Transfers involving this token "
-	transfers: [transfer!]! @derivedFrom(field: "token")
-}
-
-type accountCollection @entity {
-    " Account Id - Collection Id "
-    id: ID!
-
-    " Address of the account "
-    account: account 
-
-    " Address of the NFT Collection "
-    collection: collection 
-
-    " Count of NFT's owned in a collection by the Address"
-    tokenCount: Int!
-
-}
-
-type transaction @entity {
-  " the hash of the tx"
+  " Ethereum / Collection Addrress - Token Id "
   id: ID!
-  
-  " Timestamp for block "
-  timestamp: Int!
-  
-  " Block Number "
-  blockNumber:	Int!
 
-  " Address who initiated the transaction "
-  transactionFrom: Bytes! 
-  
-  " Count of how many transfers were not matched to a sale "
-  unmatchedTransferCount: Int!   
+  " The collection address "
+  collection: collection!
 
-  " Transfers that occured within the transaction "
-  transfers: [transfer!]! 
+  " The id of the NFT"
+  identifier: BigInt!
 
-  " Sale events that occured within the transaction "
-  sales: [sale!] @derivedFrom(field: "transaction")
+  " The address the currently owns the token "
+  owner: account
 
-  " Gas Spent "
-  gasPrice: BigInt
+  " Transfers involving this token "
+  transfers: [transfer!]! @derivedFrom(field: "token")
+}
 
+type holding @entity {
+  " Account Id - Collection Id "
+  id: ID!
+
+  " Address of the account "
+  account: account
+
+  " Address of the NFT Collection "
+  collection: collection
+
+  " Count of NFT's owned in a collection by the Address"
+  tokenCount: Int!
 }
 
 type transfer @entity {
-
-    " Block Number and Event Id in which the transfers event occured"
-    id: ID!
-    
-	" Transaction hash in which the transfer event occured"
-	transaction: transaction!
-
-    " The collection address "
-    collection: collection!
-    
-    " The collection addrress - The token id "
-    token: token!
-    
-	" The sender address "
-    senderAddress: account
-    
-    " The receiver address "
-    receiverAddress: account
-    
-    " Timestamp for block "
-    timestamp: Int!
-
-    " Block Number "
-    blockNumber: Int!
-
-	" The amount of ETH paid"
-    amount: BigDecimal!
-
-	" matched sale event for the transfer "
-	matchedSale: sale 
-        
-}
-
-type sale @entity {
-  " Block Number and Event Id in which the sale event occured"
+  " Block Number and Event Id in which the transfers event occured"
   id: ID!
-  
-  " tx that the sale occured in "
-  transaction: transaction!
-  
-  " the currency that the sale occred in "
-  currency: currency
+
+  " Transaction hash in which the transfer event occured"
+  transaction: Bytes!
+
+  " The collection address "
+  collection: collection!
+
+  " The collection addrress - The token id "
+  token: token!
+
+  " The sender address "
+  senderAddress: account
+
+  " The receiver address "
+  receiverAddress: account
 
   " Timestamp for block "
   timestamp: Int!
 
   " Block Number "
   blockNumber: Int!
-
-  " the amount of the sale "
-  amount: BigDecimal!
-
-  " The marketplace "	
-  platform: String		
-
-}
-
-type currency @entity {
-  " Currency Address "
-  id: ID! 
-
-  decimals: Int 
-
-  name: String!
-
-  symbol: String!
-
-}
-
-type hourlyCollectionSnapshot @entity {
-
-    " The collection address - The hour "
-    id: ID!
-    
-    " Unix Hour (Timestamp / 3600 * 3600) "
-    timestamp: Int
-    
-    " The collection address " 
-    collection: collection!
-    
-    " The hourly volume "
-    hourlyVolume: BigDecimal!
-    
-    " Number of hourly transactions "
-    hourlyTransactions: Int
-
-    " Average sale amount for the day "
-    hourlyAvgSale: BigDecimal!
-    
-    " Hourly top sales "
-    topSale: BigDecimal!
-    
-    " Hourly bottom sales "
-    bottomSale: BigDecimal!
-
-}
-
-type dailyCollectionSnapshot @entity {
-
-    " The collection address - The day "
-    id: ID!
-    
-    " Unix Day (Timestamp / 86400 * 86400) "
-    timestamp: Int
-    
-    " The collection address " 
-    collection: collection!
-    
-    " The daily volume "
-    dailyVolume: BigDecimal!
-    
-    " Number of daily transactions "
-    dailyTransactions: Int
-
-    " Average sale amount for the day "
-    dailyAvgSale: BigDecimal!
-    
-    " Daily top sales "
-    topSale: BigDecimal!
-    
-    " Daily bottom sales "
-    bottomSale: BigDecimal!
-
-}
-
-type weeklyCollectionSnapshot @entity {
-
-    " The collection address - The week "
-    id: ID!
-    
-    " Unix Week (Timestamp / 604800 * 604800) "
-    timestamp: Int
-    
-    " The collection address " 
-    collection: collection!
-    
-    " The monthly volume "
-    weeklyVolume: BigDecimal!
-    
-    " Number of monthly transactions "
-    weeklyTransactions: Int
-
-    " Average sale amount for the day "
-    weeklyAvgSale: BigDecimal!
-    
-    " Weekly top sales "
-    topSale: BigDecimal!
-    
-    " Weekly bottom sales "
-    bottomSale: BigDecimal!
-
-}
-
-type wethTransaction @entity {
-
-    " Hash for weth contained transaction "
-    id: ID!
-
 }

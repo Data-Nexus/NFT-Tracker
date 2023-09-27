@@ -29,13 +29,21 @@ export class contract extends Entity {
     }
   }
 
+  static loadInBlock(id: string): contract | null {
+    return changetype<contract | null>(store.get_in_block("contract", id));
+  }
+
   static load(id: string): contract | null {
     return changetype<contract | null>(store.get("contract", id));
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -78,53 +86,49 @@ export class account extends Entity {
     }
   }
 
+  static loadInBlock(id: string): account | null {
+    return changetype<account | null>(store.get_in_block("account", id));
+  }
+
   static load(id: string): account | null {
     return changetype<account | null>(store.get("account", id));
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
   }
 
-  get tokens(): Array<string> {
-    let value = this.get("tokens");
-    return value!.toStringArray();
+  get tokens(): tokenLoader {
+    return new tokenLoader("account", this.get("id")!.toString(), "tokens");
   }
 
-  set tokens(value: Array<string>) {
-    this.set("tokens", Value.fromStringArray(value));
+  get transfersFrom(): transferLoader {
+    return new transferLoader(
+      "account",
+      this.get("id")!.toString(),
+      "transfersFrom"
+    );
   }
 
-  get transfersFrom(): Array<string> {
-    let value = this.get("transfersFrom");
-    return value!.toStringArray();
+  get transfersTo(): transferLoader {
+    return new transferLoader(
+      "account",
+      this.get("id")!.toString(),
+      "transfersTo"
+    );
   }
 
-  set transfersFrom(value: Array<string>) {
-    this.set("transfersFrom", Value.fromStringArray(value));
-  }
-
-  get transfersTo(): Array<string> {
-    let value = this.get("transfersTo");
-    return value!.toStringArray();
-  }
-
-  set transfersTo(value: Array<string>) {
-    this.set("transfersTo", Value.fromStringArray(value));
-  }
-
-  get accountCollection(): Array<string> {
-    let value = this.get("accountCollection");
-    return value!.toStringArray();
-  }
-
-  set accountCollection(value: Array<string>) {
-    this.set("accountCollection", Value.fromStringArray(value));
+  get holdings(): holdingLoader {
+    return new holdingLoader("account", this.get("id")!.toString(), "holdings");
   }
 }
 
@@ -132,10 +136,6 @@ export class collection extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("totalSales", Value.fromI32(0));
-    this.set("totalVolume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -150,13 +150,21 @@ export class collection extends Entity {
     }
   }
 
+  static loadInBlock(id: string): collection | null {
+    return changetype<collection | null>(store.get_in_block("collection", id));
+  }
+
   static load(id: string): collection | null {
     return changetype<collection | null>(store.get("collection", id));
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -214,102 +222,16 @@ export class collection extends Entity {
     }
   }
 
-  get mintPrice(): BigDecimal | null {
-    let value = this.get("mintPrice");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigDecimal();
-    }
+  get tokens(): tokenLoader {
+    return new tokenLoader("collection", this.get("id")!.toString(), "tokens");
   }
 
-  set mintPrice(value: BigDecimal | null) {
-    if (!value) {
-      this.unset("mintPrice");
-    } else {
-      this.set("mintPrice", Value.fromBigDecimal(<BigDecimal>value));
-    }
-  }
-
-  get tokens(): Array<string> {
-    let value = this.get("tokens");
-    return value!.toStringArray();
-  }
-
-  set tokens(value: Array<string>) {
-    this.set("tokens", Value.fromStringArray(value));
-  }
-
-  get supportsMetadata(): boolean {
-    let value = this.get("supportsMetadata");
-    return value!.toBoolean();
-  }
-
-  set supportsMetadata(value: boolean) {
-    this.set("supportsMetadata", Value.fromBoolean(value));
-  }
-
-  get totalSales(): i32 {
-    let value = this.get("totalSales");
-    return value!.toI32();
-  }
-
-  set totalSales(value: i32) {
-    this.set("totalSales", Value.fromI32(value));
-  }
-
-  get totalVolume(): BigDecimal {
-    let value = this.get("totalVolume");
-    return value!.toBigDecimal();
-  }
-
-  set totalVolume(value: BigDecimal) {
-    this.set("totalVolume", Value.fromBigDecimal(value));
-  }
-
-  get topSale(): BigDecimal {
-    let value = this.get("topSale");
-    return value!.toBigDecimal();
-  }
-
-  set topSale(value: BigDecimal) {
-    this.set("topSale", Value.fromBigDecimal(value));
-  }
-
-  get hourlyCollectionSnapshot(): Array<string> {
-    let value = this.get("hourlyCollectionSnapshot");
-    return value!.toStringArray();
-  }
-
-  set hourlyCollectionSnapshot(value: Array<string>) {
-    this.set("hourlyCollectionSnapshot", Value.fromStringArray(value));
-  }
-
-  get dailyCollectionSnapshot(): Array<string> {
-    let value = this.get("dailyCollectionSnapshot");
-    return value!.toStringArray();
-  }
-
-  set dailyCollectionSnapshot(value: Array<string>) {
-    this.set("dailyCollectionSnapshot", Value.fromStringArray(value));
-  }
-
-  get weeklyCollectionSnapshot(): Array<string> {
-    let value = this.get("weeklyCollectionSnapshot");
-    return value!.toStringArray();
-  }
-
-  set weeklyCollectionSnapshot(value: Array<string>) {
-    this.set("weeklyCollectionSnapshot", Value.fromStringArray(value));
-  }
-
-  get accountCollection(): Array<string> {
-    let value = this.get("accountCollection");
-    return value!.toStringArray();
-  }
-
-  set accountCollection(value: Array<string>) {
-    this.set("accountCollection", Value.fromStringArray(value));
+  get holdings(): holdingLoader {
+    return new holdingLoader(
+      "collection",
+      this.get("id")!.toString(),
+      "holdings"
+    );
   }
 }
 
@@ -317,9 +239,6 @@ export class token extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("collection", Value.fromString(""));
-    this.set("identifier", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -334,13 +253,21 @@ export class token extends Entity {
     }
   }
 
+  static loadInBlock(id: string): token | null {
+    return changetype<token | null>(store.get_in_block("token", id));
+  }
+
   static load(id: string): token | null {
     return changetype<token | null>(store.get("token", id));
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -349,7 +276,11 @@ export class token extends Entity {
 
   get collection(): string {
     let value = this.get("collection");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set collection(value: string) {
@@ -358,7 +289,11 @@ export class token extends Entity {
 
   get identifier(): BigInt {
     let value = this.get("identifier");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
   set identifier(value: BigInt) {
@@ -382,45 +317,44 @@ export class token extends Entity {
     }
   }
 
-  get transfers(): Array<string> {
-    let value = this.get("transfers");
-    return value!.toStringArray();
-  }
-
-  set transfers(value: Array<string>) {
-    this.set("transfers", Value.fromStringArray(value));
+  get transfers(): transferLoader {
+    return new transferLoader("token", this.get("id")!.toString(), "transfers");
   }
 }
 
-export class accountCollection extends Entity {
+export class holding extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("tokenCount", Value.fromI32(0));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save accountCollection entity without an ID");
+    assert(id != null, "Cannot save holding entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type accountCollection must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type holding must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("accountCollection", id.toString(), this);
+      store.set("holding", id.toString(), this);
     }
   }
 
-  static load(id: string): accountCollection | null {
-    return changetype<accountCollection | null>(
-      store.get("accountCollection", id)
-    );
+  static loadInBlock(id: string): holding | null {
+    return changetype<holding | null>(store.get_in_block("holding", id));
+  }
+
+  static load(id: string): holding | null {
+    return changetype<holding | null>(store.get("holding", id));
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
@@ -463,7 +397,11 @@ export class accountCollection extends Entity {
 
   get tokenCount(): i32 {
     let value = this.get("tokenCount");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
   }
 
   set tokenCount(value: i32) {
@@ -471,134 +409,10 @@ export class accountCollection extends Entity {
   }
 }
 
-export class transaction extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromI32(0));
-    this.set("blockNumber", Value.fromI32(0));
-    this.set("transactionFrom", Value.fromBytes(Bytes.empty()));
-    this.set("unmatchedTransferCount", Value.fromI32(0));
-    this.set("transfers", Value.fromStringArray(new Array(0)));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save transaction entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type transaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("transaction", id.toString(), this);
-    }
-  }
-
-  static load(id: string): transaction | null {
-    return changetype<transaction | null>(store.get("transaction", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get blockNumber(): i32 {
-    let value = this.get("blockNumber");
-    return value!.toI32();
-  }
-
-  set blockNumber(value: i32) {
-    this.set("blockNumber", Value.fromI32(value));
-  }
-
-  get transactionFrom(): Bytes {
-    let value = this.get("transactionFrom");
-    return value!.toBytes();
-  }
-
-  set transactionFrom(value: Bytes) {
-    this.set("transactionFrom", Value.fromBytes(value));
-  }
-
-  get unmatchedTransferCount(): i32 {
-    let value = this.get("unmatchedTransferCount");
-    return value!.toI32();
-  }
-
-  set unmatchedTransferCount(value: i32) {
-    this.set("unmatchedTransferCount", Value.fromI32(value));
-  }
-
-  get transfers(): Array<string> {
-    let value = this.get("transfers");
-    return value!.toStringArray();
-  }
-
-  set transfers(value: Array<string>) {
-    this.set("transfers", Value.fromStringArray(value));
-  }
-
-  get sales(): Array<string> | null {
-    let value = this.get("sales");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set sales(value: Array<string> | null) {
-    if (!value) {
-      this.unset("sales");
-    } else {
-      this.set("sales", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
-  get gasPrice(): BigInt | null {
-    let value = this.get("gasPrice");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set gasPrice(value: BigInt | null) {
-    if (!value) {
-      this.unset("gasPrice");
-    } else {
-      this.set("gasPrice", Value.fromBigInt(<BigInt>value));
-    }
-  }
-}
-
 export class transfer extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("transaction", Value.fromString(""));
-    this.set("collection", Value.fromString(""));
-    this.set("token", Value.fromString(""));
-    this.set("timestamp", Value.fromI32(0));
-    this.set("blockNumber", Value.fromI32(0));
-    this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -613,31 +427,47 @@ export class transfer extends Entity {
     }
   }
 
+  static loadInBlock(id: string): transfer | null {
+    return changetype<transfer | null>(store.get_in_block("transfer", id));
+  }
+
   static load(id: string): transfer | null {
     return changetype<transfer | null>(store.get("transfer", id));
   }
 
   get id(): string {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
   }
 
-  get transaction(): string {
+  get transaction(): Bytes {
     let value = this.get("transaction");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set transaction(value: string) {
-    this.set("transaction", Value.fromString(value));
+  set transaction(value: Bytes) {
+    this.set("transaction", Value.fromBytes(value));
   }
 
   get collection(): string {
     let value = this.get("collection");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set collection(value: string) {
@@ -646,7 +476,11 @@ export class transfer extends Entity {
 
   get token(): string {
     let value = this.get("token");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
   }
 
   set token(value: string) {
@@ -689,7 +523,11 @@ export class transfer extends Entity {
 
   get timestamp(): i32 {
     let value = this.get("timestamp");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
   }
 
   set timestamp(value: i32) {
@@ -698,555 +536,68 @@ export class transfer extends Entity {
 
   get blockNumber(): i32 {
     let value = this.get("blockNumber");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
   }
 
   set blockNumber(value: i32) {
     this.set("blockNumber", Value.fromI32(value));
   }
+}
 
-  get amount(): BigDecimal {
-    let value = this.get("amount");
-    return value!.toBigDecimal();
+export class tokenLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
   }
 
-  set amount(value: BigDecimal) {
-    this.set("amount", Value.fromBigDecimal(value));
-  }
-
-  get matchedSale(): string | null {
-    let value = this.get("matchedSale");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set matchedSale(value: string | null) {
-    if (!value) {
-      this.unset("matchedSale");
-    } else {
-      this.set("matchedSale", Value.fromString(<string>value));
-    }
+  load(): token[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<token[]>(value);
   }
 }
 
-export class sale extends Entity {
-  constructor(id: string) {
+export class transferLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
     super();
-    this.set("id", Value.fromString(id));
-
-    this.set("transaction", Value.fromString(""));
-    this.set("timestamp", Value.fromI32(0));
-    this.set("blockNumber", Value.fromI32(0));
-    this.set("amount", Value.fromBigDecimal(BigDecimal.zero()));
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
   }
 
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save sale entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type sale must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("sale", id.toString(), this);
-    }
-  }
-
-  static load(id: string): sale | null {
-    return changetype<sale | null>(store.get("sale", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get transaction(): string {
-    let value = this.get("transaction");
-    return value!.toString();
-  }
-
-  set transaction(value: string) {
-    this.set("transaction", Value.fromString(value));
-  }
-
-  get currency(): string | null {
-    let value = this.get("currency");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set currency(value: string | null) {
-    if (!value) {
-      this.unset("currency");
-    } else {
-      this.set("currency", Value.fromString(<string>value));
-    }
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get blockNumber(): i32 {
-    let value = this.get("blockNumber");
-    return value!.toI32();
-  }
-
-  set blockNumber(value: i32) {
-    this.set("blockNumber", Value.fromI32(value));
-  }
-
-  get amount(): BigDecimal {
-    let value = this.get("amount");
-    return value!.toBigDecimal();
-  }
-
-  set amount(value: BigDecimal) {
-    this.set("amount", Value.fromBigDecimal(value));
-  }
-
-  get platform(): string | null {
-    let value = this.get("platform");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set platform(value: string | null) {
-    if (!value) {
-      this.unset("platform");
-    } else {
-      this.set("platform", Value.fromString(<string>value));
-    }
+  load(): transfer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<transfer[]>(value);
   }
 }
 
-export class currency extends Entity {
-  constructor(id: string) {
+export class holdingLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
     super();
-    this.set("id", Value.fromString(id));
-
-    this.set("name", Value.fromString(""));
-    this.set("symbol", Value.fromString(""));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save currency entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type currency must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("currency", id.toString(), this);
-    }
-  }
-
-  static load(id: string): currency | null {
-    return changetype<currency | null>(store.get("currency", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get decimals(): i32 {
-    let value = this.get("decimals");
-    return value!.toI32();
-  }
-
-  set decimals(value: i32) {
-    this.set("decimals", Value.fromI32(value));
-  }
-
-  get name(): string {
-    let value = this.get("name");
-    return value!.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get symbol(): string {
-    let value = this.get("symbol");
-    return value!.toString();
-  }
-
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
-  }
-}
-
-export class hourlyCollectionSnapshot extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("collection", Value.fromString(""));
-    this.set("hourlyVolume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("hourlyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save hourlyCollectionSnapshot entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type hourlyCollectionSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("hourlyCollectionSnapshot", id.toString(), this);
-    }
-  }
-
-  static load(id: string): hourlyCollectionSnapshot | null {
-    return changetype<hourlyCollectionSnapshot | null>(
-      store.get("hourlyCollectionSnapshot", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get collection(): string {
-    let value = this.get("collection");
-    return value!.toString();
-  }
-
-  set collection(value: string) {
-    this.set("collection", Value.fromString(value));
-  }
-
-  get hourlyVolume(): BigDecimal {
-    let value = this.get("hourlyVolume");
-    return value!.toBigDecimal();
-  }
-
-  set hourlyVolume(value: BigDecimal) {
-    this.set("hourlyVolume", Value.fromBigDecimal(value));
-  }
-
-  get hourlyTransactions(): i32 {
-    let value = this.get("hourlyTransactions");
-    return value!.toI32();
-  }
-
-  set hourlyTransactions(value: i32) {
-    this.set("hourlyTransactions", Value.fromI32(value));
-  }
-
-  get hourlyAvgSale(): BigDecimal {
-    let value = this.get("hourlyAvgSale");
-    return value!.toBigDecimal();
-  }
-
-  set hourlyAvgSale(value: BigDecimal) {
-    this.set("hourlyAvgSale", Value.fromBigDecimal(value));
-  }
-
-  get topSale(): BigDecimal {
-    let value = this.get("topSale");
-    return value!.toBigDecimal();
-  }
-
-  set topSale(value: BigDecimal) {
-    this.set("topSale", Value.fromBigDecimal(value));
-  }
-
-  get bottomSale(): BigDecimal {
-    let value = this.get("bottomSale");
-    return value!.toBigDecimal();
-  }
-
-  set bottomSale(value: BigDecimal) {
-    this.set("bottomSale", Value.fromBigDecimal(value));
-  }
-}
-
-export class dailyCollectionSnapshot extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("collection", Value.fromString(""));
-    this.set("dailyVolume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("dailyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save dailyCollectionSnapshot entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type dailyCollectionSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("dailyCollectionSnapshot", id.toString(), this);
-    }
-  }
-
-  static load(id: string): dailyCollectionSnapshot | null {
-    return changetype<dailyCollectionSnapshot | null>(
-      store.get("dailyCollectionSnapshot", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get collection(): string {
-    let value = this.get("collection");
-    return value!.toString();
-  }
-
-  set collection(value: string) {
-    this.set("collection", Value.fromString(value));
-  }
-
-  get dailyVolume(): BigDecimal {
-    let value = this.get("dailyVolume");
-    return value!.toBigDecimal();
-  }
-
-  set dailyVolume(value: BigDecimal) {
-    this.set("dailyVolume", Value.fromBigDecimal(value));
-  }
-
-  get dailyTransactions(): i32 {
-    let value = this.get("dailyTransactions");
-    return value!.toI32();
-  }
-
-  set dailyTransactions(value: i32) {
-    this.set("dailyTransactions", Value.fromI32(value));
-  }
-
-  get dailyAvgSale(): BigDecimal {
-    let value = this.get("dailyAvgSale");
-    return value!.toBigDecimal();
-  }
-
-  set dailyAvgSale(value: BigDecimal) {
-    this.set("dailyAvgSale", Value.fromBigDecimal(value));
-  }
-
-  get topSale(): BigDecimal {
-    let value = this.get("topSale");
-    return value!.toBigDecimal();
-  }
-
-  set topSale(value: BigDecimal) {
-    this.set("topSale", Value.fromBigDecimal(value));
-  }
-
-  get bottomSale(): BigDecimal {
-    let value = this.get("bottomSale");
-    return value!.toBigDecimal();
-  }
-
-  set bottomSale(value: BigDecimal) {
-    this.set("bottomSale", Value.fromBigDecimal(value));
-  }
-}
-
-export class weeklyCollectionSnapshot extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("collection", Value.fromString(""));
-    this.set("weeklyVolume", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("weeklyAvgSale", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("topSale", Value.fromBigDecimal(BigDecimal.zero()));
-    this.set("bottomSale", Value.fromBigDecimal(BigDecimal.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save weeklyCollectionSnapshot entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type weeklyCollectionSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("weeklyCollectionSnapshot", id.toString(), this);
-    }
-  }
-
-  static load(id: string): weeklyCollectionSnapshot | null {
-    return changetype<weeklyCollectionSnapshot | null>(
-      store.get("weeklyCollectionSnapshot", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get collection(): string {
-    let value = this.get("collection");
-    return value!.toString();
-  }
-
-  set collection(value: string) {
-    this.set("collection", Value.fromString(value));
-  }
-
-  get weeklyVolume(): BigDecimal {
-    let value = this.get("weeklyVolume");
-    return value!.toBigDecimal();
-  }
-
-  set weeklyVolume(value: BigDecimal) {
-    this.set("weeklyVolume", Value.fromBigDecimal(value));
-  }
-
-  get weeklyTransactions(): i32 {
-    let value = this.get("weeklyTransactions");
-    return value!.toI32();
-  }
-
-  set weeklyTransactions(value: i32) {
-    this.set("weeklyTransactions", Value.fromI32(value));
-  }
-
-  get weeklyAvgSale(): BigDecimal {
-    let value = this.get("weeklyAvgSale");
-    return value!.toBigDecimal();
-  }
-
-  set weeklyAvgSale(value: BigDecimal) {
-    this.set("weeklyAvgSale", Value.fromBigDecimal(value));
-  }
-
-  get topSale(): BigDecimal {
-    let value = this.get("topSale");
-    return value!.toBigDecimal();
-  }
-
-  set topSale(value: BigDecimal) {
-    this.set("topSale", Value.fromBigDecimal(value));
-  }
-
-  get bottomSale(): BigDecimal {
-    let value = this.get("bottomSale");
-    return value!.toBigDecimal();
-  }
-
-  set bottomSale(value: BigDecimal) {
-    this.set("bottomSale", Value.fromBigDecimal(value));
-  }
-}
-
-export class wethTransaction extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save wethTransaction entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type wethTransaction must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("wethTransaction", id.toString(), this);
-    }
-  }
-
-  static load(id: string): wethTransaction | null {
-    return changetype<wethTransaction | null>(store.get("wethTransaction", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  load(): holding[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<holding[]>(value);
   }
 }
