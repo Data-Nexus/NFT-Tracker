@@ -1,19 +1,20 @@
-specVersion: 0.0.2
+specVersion: 0.0.5
 description: 721-MarketPlace
 repository: https://github.com/Data-Nexus/nft-sales-v2
 schema:
   file: ./schema.graphql
 dataSources:
-  #### All ERC721 ####
+  #### All ERC1155 ####
   - kind: ethereum/contract
-    name: IERC721
+    name: IERC1155
     network: mainnet
     source:
-      abi: IERC721
-      startBlock: 5774644
+      #address: "" #test 1155 to inspect data
+      abi: Contract1155
+      startBlock: 0 #test 1155 to inspect data
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - transfer
@@ -24,135 +25,11 @@ dataSources:
           file: ./node_modules/@openzeppelin/contracts/build/contracts/IERC721.json
         - name: IERC721Metadata
           file: ./node_modules/@openzeppelin/contracts/build/contracts/IERC721Metadata.json
-        - name: Contract721
-          file: ./abis/Contract721.json
+        - name: Contract1155
+          file: ./abis/Contract1155.json
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-      file: ./src/eip721/index.ts
-   
-   #### WETH Contact ####
-  - kind: ethereum/contract
-    name: WETH
-    network: mainnet
-    source:
-      address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
-      abi: ERC20Abi
-      startBlock: 5774644
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - wethTransaction
-      abis:
-        - name: ERC20Abi
-          file: ./abis/ERC20ABI.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-      file: ./src/utils/wethUtil.ts
-   #### OpenSea Contracts ####
-  - kind: ethereum/contract
-    name: OpenSeaV1
-    network: mainnet
-    source:
-      address: "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"
-      abi: OpenSeaV1
-      startBlock: 5774644
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - collection
-        - token
-        - sale
-      abis:
-        - name: OpenSeaV1
-          file: ./abis/OpenSeaV1.json
-        - name: ERC20
-          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json             
-      eventHandlers:
-        - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
-          handler: handleOSv1Sale
-      file: ./src/marketplaces/OpenSeaV1Mapping.ts
-  - kind: ethereum/contract
-    name: OpenSeaV2
-    network: mainnet
-    source:
-      address: "0x7f268357A8c2552623316e2562D90e642bB538E5"
-      abi: OpenSeaV2
-      startBlock: 14120913
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - collection
-        - token
-        - sale
-      abis:
-        - name: OpenSeaV2
-          file: ./abis/OpenSeaV2.json   
-        - name: ERC20
-          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json             
-      eventHandlers:
-        - event: OrdersMatched(bytes32,bytes32,indexed address,indexed address,uint256,indexed bytes32)
-          handler: handleOSv1Sale
-       ##event is identical in v2
-      file: ./src/marketplaces/OpenSeaV1Mapping.ts 
-
-  #### LooksRare Contract ####
-  - kind: ethereum
-    name: LooksRare
-    network: mainnet
-    source:
-      address: "0x59728544B08AB483533076417FbBB2fD0B17CE3a"
-      abi: LooksRare
-      startBlock: 13885625
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - collection
-        - token
-        - sale
-      abis:
-        - name: LooksRare
-          file: ./abis/LooksRare.json
-        - name: ERC20
-          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
-      eventHandlers:
-        - event: TakerAsk(bytes32,uint256,indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256)
-          handler: handleTakerAsk
-        - event: TakerBid(bytes32,uint256,indexed address,indexed address,indexed address,address,address,uint256,uint256,uint256)
-          handler: handleTakerBid
-      file: ./src/marketplaces/LooksRareMappings.ts
-
-  #### X2Y2 Contract ####
-  - kind: ethereum
-    name: X2Y2
-    network: mainnet
-    source:
-      address: "0x74312363e45dcaba76c59ec49a7aa8a65a67eed3"
-      abi: X2Y2
-      startBlock: 14139150
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - collection
-        - token
-        - sale
-      abis:
-        - name: X2Y2
-          file: ./abis/X2Y2.json
-        - name: ERC20
-          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json          
-      eventHandlers:
-        - event: EvProfit(bytes32,address,address,uint256)
-          handler: handleEvProfit
-      file: ./src/marketplaces/X2Y2Mappings.ts
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+      file: ./src/eip1155/index.ts
