@@ -95,7 +95,7 @@ function transfer(
   collection.save();
   token.save();
 
-  let transferEntity = new Transfer(block.number.toString + "-" + logIndex.toString() + "-" + index);
+  let transferEntity = new Transfer(block.number.toString() + "-" + logIndex.toString() + "-" + index.toString());
   transferEntity.transaction = hash;
   transferEntity.token = token.id;
   transferEntity.collection = collection.id;
