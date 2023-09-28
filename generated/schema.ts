@@ -11,63 +11,6 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Contract extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Contract entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Contract must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Contract", id.toString(), this);
-    }
-  }
-
-  static loadInBlock(id: string): Contract | null {
-    return changetype<Contract | null>(store.get_in_block("Contract", id));
-  }
-
-  static load(id: string): Contract | null {
-    return changetype<Contract | null>(store.get("Contract", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get asERC1155(): string | null {
-    let value = this.get("asERC1155");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set asERC1155(value: string | null) {
-    if (!value) {
-      this.unset("asERC1155");
-    } else {
-      this.set("asERC1155", Value.fromString(<string>value));
-    }
-  }
-}
-
 export class Account extends Entity {
   constructor(id: string) {
     super();
@@ -203,6 +146,14 @@ export class Collection extends Entity {
 
   get tokens(): TokenLoader {
     return new TokenLoader("Collection", this.get("id")!.toString(), "tokens");
+  }
+
+  get collectionHoldings(): CollectionHoldingLoader {
+    return new CollectionHoldingLoader(
+      "Collection",
+      this.get("id")!.toString(),
+      "collectionHoldings"
+    );
   }
 }
 
@@ -356,6 +307,89 @@ export class Holding extends Entity {
 
   set token(value: string) {
     this.set("token", Value.fromString(value));
+  }
+
+  get balance(): BigInt {
+    let value = this.get("balance");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set balance(value: BigInt) {
+    this.set("balance", Value.fromBigInt(value));
+  }
+}
+
+export class CollectionHolding extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CollectionHolding entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CollectionHolding must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CollectionHolding", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): CollectionHolding | null {
+    return changetype<CollectionHolding | null>(
+      store.get_in_block("CollectionHolding", id)
+    );
+  }
+
+  static load(id: string): CollectionHolding | null {
+    return changetype<CollectionHolding | null>(
+      store.get("CollectionHolding", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get account(): string {
+    let value = this.get("account");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set account(value: string) {
+    this.set("account", Value.fromString(value));
+  }
+
+  get collection(): string {
+    let value = this.get("collection");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set collection(value: string) {
+    this.set("collection", Value.fromString(value));
   }
 
   get balance(): BigInt {
@@ -554,5 +588,23 @@ export class TokenLoader extends Entity {
   load(): Token[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<Token[]>(value);
+  }
+}
+
+export class CollectionHoldingLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CollectionHolding[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CollectionHolding[]>(value);
   }
 }

@@ -1,4 +1,4 @@
-import {Transfer, Holding} from "../../generated/schema";
+import {Transfer, Holding, CollectionHolding} from "../../generated/schema";
 
 import {TransferSingle as TransferEvent, TransferBatch as TransferBatchEvent} from "../../generated/IERC1155/Contract1155";
 
@@ -6,7 +6,7 @@ import {fetchRegistry, fetchToken} from "../utils/erc1155";
 
 import {constants} from "../graphprotocol-utils";
 
-import {json, store, BigInt, ethereum, Address, Bytes} from "@graphprotocol/graph-ts";
+import {store, BigInt, ethereum, Address, Bytes} from "@graphprotocol/graph-ts";
 import {getOrCreateAccount} from "../utils/entity-factory";
 
 export function handleTransferSingle(event: TransferEvent): void {
@@ -71,6 +71,18 @@ function transfer(
     }
   }
 
+  //decrement collecting holdings for sender
+  let senderCollectionHolding = CollectionHolding.load(collection.id + "-" + senderAddress.id);
+  if (senderCollectionHolding && senderAddress.id != "0x0000000000000000000000000000000000000000") {
+    let senderTokenCountNew = senderCollectionHolding.balance.minus(value);
+    senderCollectionHolding.balance = senderTokenCountNew;
+    senderCollectionHolding.save();
+
+    if (senderCollectionHolding.balance == BigInt.fromI32(0)) {
+      store.remove("CollectionHolding", collection.id + "-" + senderAddress.id);
+    }
+  }
+
   //increment token holdings for receiver (if it doesn't exist create it)
   let receiverHolding = Holding.load(receiverAddress.id + "-" + collection.id);
   if (receiverHolding && receiverAddress.id != constants.ADDRESS_ZERO) {
@@ -86,6 +98,23 @@ function transfer(
     receiverHolding.balance = value;
 
     receiverHolding.save();
+  }
+
+  //increment collection holdings for receiver (if it doesn't exist create it)
+  let receiverCollectionHolding = CollectionHolding.load(collection.id + "-" + senderAddress.id);
+  if (receiverCollectionHolding && receiverAddress.id != constants.ADDRESS_ZERO) {
+    let receiverTokenCountNew = receiverCollectionHolding.balance.plus(value);
+
+    receiverCollectionHolding.balance = receiverTokenCountNew;
+    receiverCollectionHolding.save();
+  }
+  if (!receiverCollectionHolding && receiverAddress.id != constants.ADDRESS_ZERO) {
+    receiverCollectionHolding = new CollectionHolding(receiverAddress.id + "-" + token.id);
+    receiverCollectionHolding.account = receiverAddress.id;
+    receiverCollectionHolding.collection = collection.id;
+    receiverCollectionHolding.balance = value;
+
+    receiverCollectionHolding.save();
   }
 
   //update token's total supply on mints & burns

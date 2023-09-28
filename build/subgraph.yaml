@@ -6,7 +6,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: IERC1155
-    network: mainnet
+    network: base
     source:
       abi: Contract1155
       startBlock: 0

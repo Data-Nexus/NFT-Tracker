@@ -7,7 +7,7 @@ dataSources:
   #### All ERC1155 ####
   - kind: ethereum/contract
     name: IERC1155
-    network: mainnet
+    network: base
     source:
       #address: "" #test 1155 to inspect data
       abi: Contract1155

@@ -1,8 +1,3 @@
-type Contract @entity {
-  id: ID!
-  asERC1155: Collection
-}
-
 type Account @entity {
   " the wallet address "
   id: ID!
@@ -13,7 +8,7 @@ type Account @entity {
   " The transfers recevied by this account"
   transfersTo: [Transfer!]! @derivedFrom(field: "receiverAddress")
 
-  " M:M relationship for Accounts and Collections "
+  " Represents the NFT's owned by the account "
   holdings: [Holding!]! @derivedFrom(field: "account")
 }
 
@@ -30,6 +25,9 @@ type Collection @entity {
 
   " Tokens for the collection"
   tokens: [Token!]! @derivedFrom(field: "collection")
+
+  " M:M relationship for Accounts and Collections "
+  collectionHoldings: [CollectionHolding!]! @derivedFrom(field: "collection")
 }
 
 type Token @entity {
@@ -52,6 +50,7 @@ type Token @entity {
   holdings: [Holding!]! @derivedFrom(field: "token")
 }
 
+" Account level holding for an NFT "
 type Holding @entity {
   " Account Id - Token Id "
   id: ID!
@@ -61,6 +60,21 @@ type Holding @entity {
 
   " token Id "
   token: Token!
+
+  " Count of NFT's owned by the Address"
+  balance: BigInt!
+}
+
+" Account level holding for an collection "
+type CollectionHolding @entity {
+  " Collection Id - Account ID "
+  id: ID!
+
+  " Address of the account "
+  account: Account!
+
+  " token Id "
+  collection: Collection!
 
   " Count of NFT's owned in a collection by the Address"
   balance: BigInt!

@@ -1,16 +1,13 @@
-import {Address, BigDecimal, BigInt} from "@graphprotocol/graph-ts";
+import {Address, BigInt} from "@graphprotocol/graph-ts";
 
 import {IERC721Metadata} from "../../generated/IERC721/IERC721Metadata";
 
-import {Contract1155} from "../../generated/IERC1155/Contract1155";
-
-import {Account, Collection, Contract, Token} from "../../generated/schema";
+import {Collection, Token} from "../../generated/schema";
 
 import {constants} from "../graphprotocol-utils";
 
 export function fetchRegistry(address: Address): Collection {
   let erc721 = IERC721Metadata.bind(address);
-  let collection = Contract1155.bind(address);
   let collectionEntity = Collection.load(address.toHexString());
 
   if (collectionEntity == null) {
@@ -33,6 +30,7 @@ export function fetchToken(collection: Collection, id: BigInt): Token {
     tokenEntity = new Token(tokenid);
     tokenEntity.collection = collection.id;
     tokenEntity.identifier = id;
+    tokenEntity.totalSupply = constants.BIGINT_ZERO;
   }
   return tokenEntity as Token;
 }

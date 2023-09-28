@@ -9,5 +9,5 @@ export namespace constants {
   export let BIGDECIMAL_ONE = new BigDecimal(constants.BIGINT_ONE);
   export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
   export const BYTES32_ZERO = "0x0000000000000000000000000000000000000000000000000000000000000000";
-  export const NETWORK = "ETH";
+  export const NETWORK = "BASE";
 }

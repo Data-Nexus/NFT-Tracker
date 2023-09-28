@@ -1,4 +1,3 @@
-import {Address} from "@graphprotocol/graph-ts";
 import {Account} from "../../generated/schema";
 
 export function getOrCreateAccount(address: string): Account {
