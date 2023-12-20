@@ -1,15 +1,15 @@
-specVersion: 0.0.5
-description: 721-MarketPlace
+specVersion: 0.0.8
+description: 1155-MarketPlace
 repository: https://github.com/Data-Nexus/nft-sales-v2
 schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: IERC1155
-    network: base
+    network: sepolia
     source:
       abi: Contract1155
-      startBlock: 0
+      startBlock: 4000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,14 +20,14 @@ dataSources:
         - account
       abis:
         - name: IERC721
-          file: IERC1155\node_modules\@openzeppelin\contracts\build\contracts\IERC721.json
+          file: IERC1155/abis/IERC721.json
         - name: IERC721Metadata
-          file: IERC1155\node_modules\@openzeppelin\contracts\build\contracts\IERC721Metadata.json
+          file: IERC1155/abis/IERC721Metadata.json
         - name: Contract1155
-          file: IERC1155\abis\Contract1155.json
+          file: IERC1155/abis/Contract1155.json
       eventHandlers:
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
-      file: IERC1155\IERC1155.wasm
+      file: IERC1155/IERC1155.wasm
