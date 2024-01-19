@@ -10,7 +10,7 @@ export function fetchRegistry(address: Address): Collection {
   let erc721 = IERC721Metadata.bind(address);
   let collectionEntity = Collection.load(address.toHexString());
 
-  if (collectionEntity == null) {
+  if (!collectionEntity) {
     collectionEntity = new Collection(address.toHexString());
 
     //contract calls
@@ -19,6 +19,7 @@ export function fetchRegistry(address: Address): Collection {
 
     collectionEntity.name = try_name.reverted ? "" : try_name.value;
     collectionEntity.symbol = try_symbol.reverted ? "" : try_symbol.value;
+    collectionEntity.save()
   }
   return collectionEntity as Collection;
 }
@@ -31,6 +32,7 @@ export function fetchToken(collection: Collection, id: BigInt): Token {
     tokenEntity.collection = collection.id;
     tokenEntity.identifier = id;
     tokenEntity.totalSupply = constants.BIGINT_ZERO;
+    tokenEntity.save()
   }
   return tokenEntity as Token;
 }
