@@ -9,7 +9,7 @@ dataSources:
     network: sepolia
     source:
       abi: Contract1155
-      startBlock: 4000000
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

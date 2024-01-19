@@ -9,7 +9,13 @@ import {constants} from "../graphprotocol-utils";
 import {store, BigInt, ethereum, Address, Bytes} from "@graphprotocol/graph-ts";
 import {getOrCreateAccount} from "../utils/entity-factory";
 
+const IGNORE_CONTRACT_ADDRESS = "0xabe3b6b8eedeb953046e3c5e83fbce0cf9625e64";
+
 export function handleTransferSingle(event: TransferEvent): void {
+  if (event.params.from.toHexString() == constants.ADDRESS_ZERO
+  && event.address.toHexString() == IGNORE_CONTRACT_ADDRESS) {
+    return;
+  }
   transfer(
     event.address,
     event.params.from,
@@ -24,6 +30,10 @@ export function handleTransferSingle(event: TransferEvent): void {
 }
 
 export function handleTransferBatch(event: TransferBatchEvent): void {
+  if (event.params.from.toHexString() == constants.ADDRESS_ZERO
+  && event.address.toHexString() == IGNORE_CONTRACT_ADDRESS) {
+    return;
+  }
   for (let index = 0; index < event.params.ids.length; index++) {
     transfer(
       event.address,
