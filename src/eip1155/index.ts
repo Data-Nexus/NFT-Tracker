@@ -9,6 +9,7 @@ import {constants} from "../graphprotocol-utils";
 import {store, BigInt, ethereum, Address, Bytes} from "@graphprotocol/graph-ts";
 import {getOrCreateAccount} from "../utils/entity-factory";
 
+
 export function handleTransferSingle(event: TransferEvent): void {
   transfer(
     event.address,
@@ -67,7 +68,7 @@ function transfer(
     senderHolding.save();
 
     if (senderHolding.balance == BigInt.fromI32(0)) {
-      store.remove("Holding", senderAddress.id + "-" + collection.id);
+      store.remove("Holding", senderAddress.id + "-" + token.id);
     }
   }
 
@@ -84,7 +85,7 @@ function transfer(
   }
 
   //increment token holdings for receiver (if it doesn't exist create it)
-  let receiverHolding = Holding.load(receiverAddress.id + "-" + collection.id);
+  let receiverHolding = Holding.load(receiverAddress.id + "-" + token.id);
   if (receiverHolding && receiverAddress.id != constants.ADDRESS_ZERO) {
     let receiverTokenCountNew = receiverHolding.balance.plus(value);
 
@@ -101,7 +102,7 @@ function transfer(
   }
 
   //increment collection holdings for receiver (if it doesn't exist create it)
-  let receiverCollectionHolding = CollectionHolding.load(collection.id + "-" + senderAddress.id);
+  let receiverCollectionHolding = CollectionHolding.load(collection.id + "-" + receiverAddress.id);
   if (receiverCollectionHolding && receiverAddress.id != constants.ADDRESS_ZERO) {
     let receiverTokenCountNew = receiverCollectionHolding.balance.plus(value);
 
@@ -109,7 +110,7 @@ function transfer(
     receiverCollectionHolding.save();
   }
   if (!receiverCollectionHolding && receiverAddress.id != constants.ADDRESS_ZERO) {
-    receiverCollectionHolding = new CollectionHolding(receiverAddress.id + "-" + token.id);
+    receiverCollectionHolding = new CollectionHolding(collection.id + "-" + receiverAddress.id);
     receiverCollectionHolding.account = receiverAddress.id;
     receiverCollectionHolding.collection = collection.id;
     receiverCollectionHolding.balance = value;
